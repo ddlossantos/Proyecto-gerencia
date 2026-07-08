@@ -1,0 +1,9 @@
+﻿archivo,coincidencias,total_keywords,porcentaje,estado,palabras_encontradas,palabras_faltantes
+CV_Sofia_Ramirez.pdf,7,7,100.0,high_accuracy,"ingeniero de datos, analista de datos, base de datos, python, utp, universidad tecnologica de panama, iOS",
+CV_Andrea_Villarreal.txt,7,7,100.0,high_accuracy,"ingeniero de datos, analista de datos, base de datos, python, utp, universidad tecnologica de panama, iOS",
+CV_Miguel_Soto.txt,7,7,100.0,high_accuracy,"ingeniero de datos, analista de datos, base de datos, python, utp, universidad tecnologica de panama, iOS",
+CV_Andres_Pimentel.pdf,4,7,57.14,low_accuracy,"analista de datos, base de datos, python, utp","ingeniero de datos, universidad tecnologica de panama, iOS"
+CV_Roberto_Castillo.txt,3,7,42.86,descartado,"base de datos, python, iOS","ingeniero de datos, analista de datos, utp, universidad tecnologica de panama"
+CV_Carlos_Mendoza.txt,1,7,14.29,descartado,iOS,"ingeniero de datos, analista de datos, base de datos, python, utp, universidad tecnologica de panama"
+CV_Valeria_Torres.pdf,0,7,0.0,descartado,,"ingeniero de datos, analista de datos, base de datos, python, utp, universidad tecnologica de panama, iOS"
+CV_Lucia_Herrera.txt,0,7,0.0,descartado,,"ingeniero de datos, analista de datos, base de datos, python, utp, universidad tecnologica de panama, iOS"

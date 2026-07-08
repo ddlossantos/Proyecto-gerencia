@@ -1,0 +1,60 @@
+CURRICULUM VITAE
+================
+
+Nombre: Miguel Ángel Soto
+Correo: miguel.soto@email.com
+Teléfono: +507 6000-5555
+
+PERFIL PROFESIONAL
+------------------
+Ingeniero de datos y analista de datos con más de 5 años de experiencia en el
+sector bancario y telecomunicaciones. Egresado de la universidad tecnologica de
+panama (utp). Dominio avanzado de python para procesamiento y análisis de datos,
+gestión de base de datos a gran escala y desarrollo de aplicaciones iOS para
+visualización de métricas en tiempo real.
+
+EXPERIENCIA LABORAL
+-------------------
+Senior Ingeniero de datos — Banco Nacional de Panamá (2021 - 2024)
+- Arquitectura de base de datos para procesamiento de transacciones masivas
+- Desarrollo de modelos predictivos como analista de datos del equipo de riesgos
+- Implementación de soluciones en python con PySpark y Databricks
+- Integración de app iOS para monitoreo de KPIs por parte de gerencia
+
+Ingeniero de datos — Cable Onda (2019 - 2021)
+- Migración de base de datos legacy a arquitectura cloud
+- Análisis y limpieza de datos de clientes como analista de datos
+- Desarrollo en python de scripts de automatización y reportería
+
+EDUCACIÓN
+---------
+Licenciatura en Ingeniería en Sistemas y Computación
+universidad tecnologica de panama — 2019
+
+Maestría en Ciencia de Datos (en curso)
+utp — 2023 - presente
+
+HABILIDADES TÉCNICAS
+--------------------
+- python (experto): pandas, scikit-learn, PySpark, FastAPI
+- base de datos: Oracle, PostgreSQL, MongoDB, Redis, Snowflake
+- iOS: Swift, SwiftUI, Xcode — publicación en App Store
+- Apache Kafka, Airflow, dbt
+- Azure, GCP, AWS
+- Power BI, Tableau
+
+PROYECTOS DESTACADOS
+--------------------
+- Pipeline de analista de datos en tiempo real para detección de fraude bancario
+- App iOS interna para visualización de dashboard de base de datos corporativa
+- Librería python open source para limpieza automatizada de datasets
+
+CERTIFICACIONES
+---------------
+- Microsoft Azure Data Engineer Associate
+- Databricks Certified Associate Developer
+- Apple Developer (iOS)
+
+IDIOMAS
+-------
+Español (nativo), Inglés avanzado, Portugués intermedio

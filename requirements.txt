@@ -1,0 +1,10 @@
+ipykernel
+jupyter
+ipywidgets
+pandas
+mysql-connector-python
+matplotlib
+PyPDF2
+python-docx
+odfpy
+python-dotenv

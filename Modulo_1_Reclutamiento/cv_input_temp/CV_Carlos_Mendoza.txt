@@ -1,0 +1,38 @@
+CURRICULUM VITAE
+================
+
+Nombre: Carlos Mendoza
+Correo: carlos.mendoza@email.com
+Teléfono: +507 6000-1111
+
+PERFIL PROFESIONAL
+------------------
+Técnico en soporte de computadoras con experiencia en mantenimiento de equipos
+de escritorio y redes locales. Me apasiona la tecnología y el trabajo en equipo.
+
+EXPERIENCIA LABORAL
+-------------------
+Soporte Técnico — TechHelp Panamá (2019 - 2023)
+- Reparación de equipos de cómputo
+- Instalación de sistemas operativos Windows
+- Cableado estructurado y configuración de routers
+
+Auxiliar de Sistemas — Ferretería El Clavo (2017 - 2019)
+- Mantenimiento preventivo de computadoras
+- Soporte a usuarios internos
+
+EDUCACIÓN
+---------
+Técnico en Informática
+Instituto Don Bosco — 2017
+
+HABILIDADES
+-----------
+- Microsoft Office
+- Soporte técnico presencial
+- Redes LAN básicas
+- Windows Server 2012
+
+IDIOMAS
+-------
+Español (nativo), Inglés básico

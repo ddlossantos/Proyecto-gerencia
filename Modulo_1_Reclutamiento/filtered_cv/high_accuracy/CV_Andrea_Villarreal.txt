@@ -1,0 +1,51 @@
+CURRICULUM VITAE
+================
+
+Nombre: Andrea Villarreal
+Correo: andrea.villarreal@email.com
+Teléfono: +507 6000-4444
+
+PERFIL PROFESIONAL
+------------------
+Ingeniero de datos con 4 años de experiencia en construcción de pipelines,
+modelado de datos y análisis de grandes volúmenes de información. Egresada de la
+universidad tecnologica de panama, con sólida base en python y manejo avanzado
+de base de datos relacionales y no relacionales. Experiencia en desarrollo de
+aplicaciones móviles iOS como complemento a soluciones de datos.
+
+EXPERIENCIA LABORAL
+-------------------
+Ingeniero de datos — DataFlow Corp (2022 - 2024)
+- Diseño e implementación de pipelines ETL en python
+- Administración de base de datos en Snowflake y PostgreSQL
+- Creación de dashboards para analista de datos del área comercial
+- Automatización de reportes con pandas y SQLAlchemy
+
+Junior Data Engineer — TechGroup Panamá (2020 - 2022)
+- Soporte al equipo de analista de datos
+- Carga y transformación de datos desde múltiples fuentes
+- Documentación de modelos de base de datos
+
+EDUCACIÓN
+---------
+Licenciatura en Ingeniería en Sistemas y Computación
+universidad tecnologica de panama (utp) — 2020
+Graduada con honores
+
+HABILIDADES TÉCNICAS
+--------------------
+- python (avanzado): pandas, numpy, PySpark
+- base de datos: PostgreSQL, MySQL, MongoDB, Snowflake
+- Desarrollo iOS (Swift, Xcode) — nivel intermedio
+- Apache Airflow, dbt
+- AWS S3, Redshift
+- Git, Docker
+
+CERTIFICACIONES
+---------------
+- AWS Certified Cloud Practitioner
+- Google Data Analytics Certificate
+
+IDIOMAS
+-------
+Español (nativo), Inglés avanzado

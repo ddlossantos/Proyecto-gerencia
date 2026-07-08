@@ -1,0 +1,47 @@
+CURRICULUM VITAE
+================
+
+Nombre: Roberto Castillo
+Correo: roberto.castillo@email.com
+Teléfono: +507 6000-3333
+
+PERFIL PROFESIONAL
+------------------
+Desarrollador de software con enfoque en aplicaciones web y manejo de base de datos
+relacionales. Con experiencia en proyectos de mediana escala usando python como
+lenguaje principal de backend. Busco nuevas oportunidades en el área de tecnología
+y análisis.
+
+EXPERIENCIA LABORAL
+-------------------
+Desarrollador Backend — Soluciones Web PTY (2021 - 2024)
+- Desarrollo de APIs REST en python con Flask
+- Administración y diseño de base de datos MySQL y PostgreSQL
+- Integración de servicios de terceros mediante APIs
+
+Practicante de Desarrollo — StartupHub (2020 - 2021)
+- Apoyo en tareas de programación web
+- Documentación técnica de sistemas
+
+EDUCACIÓN
+---------
+Licenciatura en Ingeniería de Sistemas
+Universidad Latina de Panamá — 2020
+
+HABILIDADES TÉCNICAS
+--------------------
+- python (intermedio)
+- base de datos: MySQL, PostgreSQL, SQLite
+- HTML, CSS, JavaScript básico
+- Git y GitHub
+- Linux Ubuntu
+
+HABILIDADES BLANDAS
+-------------------
+- Trabajo en equipo
+- Resolución de problemas
+- Comunicación efectiva
+
+IDIOMAS
+-------
+Español (nativo), Inglés técnico
