@@ -47,6 +47,8 @@ Inicializa la base de datos:
 mysql -h localhost -P 1989 -u root -p < rrhh_schema.sql
 ```
 
+Si PowerShell indica que `mysql` no se reconoce, instala MySQL Server/Client o agrega la carpeta `bin` de MySQL al `PATH` de Windows. Una ruta comun es `C:\Program Files\MySQL\MySQL Server 8.0\bin`.
+
 Abre los notebooks:
 
 ```powershell
