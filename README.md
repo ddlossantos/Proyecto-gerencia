@@ -4,6 +4,8 @@ Sistema digital de gestion de Recursos Humanos para centralizar procesos de recl
 
 ## Estructura
 
+- `backend/`: API en FastAPI con modelos, endpoints y datos demo de 300 colaboradores.
+- `frontend/`: app React + Vite con dashboard, sidebar, formularios, tablas y graficas.
 - `modulo_departamentos.ipynb`: modulo 0 para CRUD de departamentos.
 - `Modulo_1_Reclutamiento/`: gestion de palabras clave, carga de CVs, extraccion de texto y filtrado de candidatos.
 - `Modulo_2_Personal/`: ingreso de colaboradores, datos personales y datos laborales.
@@ -13,6 +15,57 @@ Sistema digital de gestion de Recursos Humanos para centralizar procesos de recl
 - `Modulo_6_Reportes/`: KPIs, dashboard gerencial y exportacion CSV.
 - `rrhh_schema.sql`: esquema MySQL de la base de datos `rrhh_sistema`.
 - `docs/`: indicaciones del proyecto y resumen de avance.
+
+## App web unificada
+
+La entrega principal ahora es una aplicacion web con:
+
+- Frontend en React.
+- Backend en FastAPI.
+- Base local SQLite automatica para demo.
+- Semilla automatica de minimo 300 colaboradores.
+- Soporte opcional para MySQL por `DATABASE_URL`.
+
+### 1. Backend
+
+Desde la raiz del repositorio:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+API:
+
+- `http://127.0.0.1:8000/api/health`
+- `http://127.0.0.1:8000/docs`
+
+### 2. Frontend
+
+En otra terminal:
+
+```powershell
+cd frontend
+pnpm install
+pnpm dev
+```
+
+Abre:
+
+```text
+http://127.0.0.1:5173
+```
+
+### Datos demo
+
+Al iniciar el backend, si la base local esta vacia, se crean automaticamente 300 colaboradores con departamentos, asistencia, ausencias, vacaciones, capacitaciones, evaluaciones, movimientos y salidas.
+
+Para regenerar la data demo:
+
+```powershell
+Invoke-RestMethod -Method Post "http://127.0.0.1:8000/api/seed?reset=true&employees=300"
+```
 
 ## Arranque local en PowerShell
 
@@ -49,7 +102,7 @@ mysql -h localhost -P 1989 -u root -p < rrhh_schema.sql
 
 Si PowerShell indica que `mysql` no se reconoce, instala MySQL Server/Client o agrega la carpeta `bin` de MySQL al `PATH` de Windows. Una ruta comun es `C:\Program Files\MySQL\MySQL Server 8.0\bin`.
 
-Abre los notebooks:
+Los notebooks originales siguen disponibles como respaldo y evidencia del avance previo:
 
 ```powershell
 jupyter notebook

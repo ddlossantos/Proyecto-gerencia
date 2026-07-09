@@ -12,10 +12,17 @@ __pycache__/
 
 .ipynb_checkpoints/
 
+node_modules/
+dist/
+build/
+
 *.db
 *.sqlite
 *.sqlite3
 *.log
+
+backend/data/
+frontend/.env.local
 
 .agents/
 .codex/

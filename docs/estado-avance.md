@@ -28,3 +28,11 @@ La carpeta `Proyecto Final Gerencia de Recursos Humanos 1IL252 Grupo 6` ya conti
 - Se reemplazo la clave de MySQL escrita directamente por variables de entorno.
 - Se agrego `.env.example` para documentar la configuracion local sin subir credenciales reales.
 - Se agrego `requirements.txt` para instalar dependencias en un entorno virtual.
+
+## Nueva app unificada
+
+- Se agrego backend FastAPI en `backend/`.
+- Se agrego frontend React + Vite en `frontend/`.
+- El backend crea datos demo de 300 colaboradores si la base esta vacia.
+- La interfaz incluye dashboard gerencial, reclutamiento, personal, control diario, desarrollo, salida y reportes.
+- La base demo por defecto es SQLite para que la presentacion pueda correr aunque MySQL no este instalado; MySQL queda disponible configurando `DATABASE_URL`.
