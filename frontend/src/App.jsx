@@ -101,7 +101,7 @@ function App() {
         <div className="brand">
           <div className="brand-mark">RH</div>
           <div>
-            <strong>Talento 360</strong>
+            <strong>Tao's Team</strong>
             <span>Grupo 6</span>
           </div>
         </div>
