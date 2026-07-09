@@ -31,9 +31,8 @@ La entrega principal ahora es una aplicacion web con:
 Desde la raiz del repositorio:
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python -m uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 API:
@@ -47,9 +46,11 @@ En otra terminal:
 
 ```powershell
 cd frontend
-pnpm install
-pnpm dev
+pnpm.cmd install
+pnpm.cmd dev
 ```
+
+Si PowerShell bloquea `npm.ps1` o `pnpm.ps1`, usa siempre `npm.cmd` o `pnpm.cmd`.
 
 Abre:
 
@@ -72,11 +73,18 @@ Invoke-RestMethod -Method Post "http://127.0.0.1:8000/api/seed?reset=true&employ
 Desde la raiz del repositorio:
 
 ```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -m ipykernel install --user --name proyecto-gerencia --display-name "Python (Proyecto Gerencia)"
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m ipykernel install --user --name proyecto-gerencia --display-name "Python (Proyecto Gerencia)"
+```
+
+En Windows puede pasar que `py` no exista o que PowerShell bloquee `Activate.ps1`. Por eso los comandos anteriores usan `python` y la ruta directa `.\.venv\Scripts\python.exe`.
+
+Tambien puedes usar los scripts `.cmd` incluidos:
+
+```powershell
+.\scripts\setup_windows.cmd
 ```
 
 Configura la conexion a MySQL:
