@@ -35,6 +35,14 @@ export const api = {
     return request(`/employees?${search.toString()}`);
   },
   getEmployeeOptions: () => request("/employees/options"),
+  getVacancies: () => request("/vacancies"),
+  getEvaluations: (params = {}) => {
+    const search = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") search.set(key, value);
+    });
+    return request(`/evaluations?${search.toString()}`);
+  },
   createEmployee: (payload) => request("/employees", { method: "POST", body: JSON.stringify(payload) }),
   getRecentRecords: () => request("/records/recent"),
   recordAttendance: (payload) => request("/attendance", { method: "POST", body: JSON.stringify(payload) }),

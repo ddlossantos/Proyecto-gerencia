@@ -25,6 +25,7 @@ La entrega principal ahora es una aplicacion web con:
 - Base local SQLite automatica para demo.
 - Semilla automatica de minimo 300 colaboradores.
 - Soporte opcional para MySQL por `DATABASE_URL`.
+- Landing de producto con portada, solucion, equipo, manual, dashboard y modulos.
 
 ### 1. Backend
 

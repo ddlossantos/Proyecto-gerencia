@@ -158,6 +158,58 @@ def get_active_employee_options(db: Session) -> list[dict[str, Any]]:
     ]
 
 
+def list_vacancies() -> list[dict[str, Any]]:
+    return [
+        {
+            "id": 1,
+            "puesto": "Analista de Datos RRHH",
+            "departamento": "Recursos Humanos",
+            "cantidad": 2,
+            "estado": "Abierta",
+            "prioridad": "Alta",
+            "descripcion": "Perfil orientado a reportes, KPIs, depuracion de datos y soporte al dashboard gerencial.",
+        },
+        {
+            "id": 2,
+            "puesto": "Soporte Tecnico",
+            "departamento": "Tecnologia",
+            "cantidad": 3,
+            "estado": "Abierta",
+            "prioridad": "Media",
+            "descripcion": "Atencion de incidencias, mantenimiento preventivo y soporte a usuarios internos.",
+        },
+        {
+            "id": 3,
+            "puesto": "Ejecutivo de Ventas",
+            "departamento": "Ventas",
+            "cantidad": 4,
+            "estado": "Abierta",
+            "prioridad": "Alta",
+            "descripcion": "Gestion de cartera, prospeccion comercial y seguimiento de oportunidades.",
+        },
+        {
+            "id": 4,
+            "puesto": "Auditor de Calidad",
+            "departamento": "Calidad",
+            "cantidad": 1,
+            "estado": "En evaluacion",
+            "prioridad": "Media",
+            "descripcion": "Revision de procesos internos, controles y acciones de mejora continua.",
+        },
+    ]
+
+
+def list_evaluations(db: Session, codigo_empresa: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
+    query = (
+        db.query(models.PerformanceEvaluation)
+        .options(joinedload(models.PerformanceEvaluation.empleado))
+        .order_by(desc(models.PerformanceEvaluation.fecha_evaluacion))
+    )
+    if codigo_empresa:
+        query = query.filter(models.PerformanceEvaluation.codigo_empresa == codigo_empresa)
+    return [evaluation_to_dict(row) for row in query.limit(min(limit, 500)).all()]
+
+
 def record_attendance(db: Session, payload: schemas.AttendanceCreate) -> dict[str, Any]:
     existing = (
         db.query(models.Attendance)

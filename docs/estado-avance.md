@@ -36,3 +36,14 @@ La carpeta `Proyecto Final Gerencia de Recursos Humanos 1IL252 Grupo 6` ya conti
 - El backend crea datos demo de 300 colaboradores si la base esta vacia.
 - La interfaz incluye dashboard gerencial, reclutamiento, personal, control diario, desarrollo, salida y reportes.
 - La base demo por defecto es SQLite para que la presentacion pueda correr aunque MySQL no este instalado; MySQL queda disponible configurando `DATABASE_URL`.
+
+## Enfoque de producto y venta
+
+- Se agregaron pestañas de portada, solucion, quienes somos, manual de usuario y dashboard.
+- La portada presenta Talento 360 como producto de software para vender a gerencia.
+- La seccion de solucion explica que ofrece cada modulo.
+- Quienes somos incluye organigrama simple y funciones del equipo.
+- El manual resume el uso de cada modulo y el tipo de marcado de asistencia.
+- Reclutamiento muestra vacantes abiertas, cantidades y puestos.
+- Desarrollo permite filtrar evaluaciones por colaborador y ver su porcentaje neto.
+- El dashboard separa colores por departamento y agrega leyenda para mejorar lectura visual.

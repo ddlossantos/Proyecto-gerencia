@@ -81,6 +81,20 @@ def get_employee_options(db: Session = Depends(get_db)):
     return repository.get_active_employee_options(db)
 
 
+@app.get("/api/vacancies")
+def get_vacancies():
+    return repository.list_vacancies()
+
+
+@app.get("/api/evaluations")
+def get_evaluations(
+    codigo_empresa: str | None = None,
+    limit: int = Query(default=100, ge=1, le=500),
+    db: Session = Depends(get_db),
+):
+    return repository.list_evaluations(db, codigo_empresa=codigo_empresa, limit=limit)
+
+
 @app.post("/api/employees")
 def post_employee(payload: schemas.EmployeeCreate, db: Session = Depends(get_db)):
     try:
