@@ -5,7 +5,7 @@ Sistema digital de gestion de Recursos Humanos para centralizar procesos de recl
 ## Estructura
 
 - `backend/`: API en FastAPI con modelos, endpoints y datos demo de 300 colaboradores.
-- `frontend/`: app React + Vite con dashboard, sidebar, formularios, tablas y graficas.
+- `frontend/`: app React + Vite con landing de producto, dashboard, formularios, tablas y graficas, con inspiracion visual en Play Astro y TailAdmin adaptada al proyecto.
 - `modulo_departamentos.ipynb`: modulo 0 para CRUD de departamentos.
 - `Modulo_1_Reclutamiento/`: gestion de palabras clave, carga de CVs, extraccion de texto y filtrado de candidatos.
 - `Modulo_2_Personal/`: ingreso de colaboradores, datos personales y datos laborales.
@@ -25,7 +25,11 @@ La entrega principal ahora es una aplicacion web con:
 - Base local SQLite automatica para demo.
 - Semilla automatica de minimo 300 colaboradores.
 - Soporte opcional para MySQL por `DATABASE_URL`.
-- Landing de producto con portada, solucion, equipo, manual, dashboard y modulos.
+- Landing de producto con tres pestanas principales: Inicio, Solucion y Dashboard.
+- Inicio une portada, introduccion, organigrama y quienes somos en una experiencia de scroll.
+- Solucion une propuesta de producto y manual de usuario por modulo.
+- Dashboard agrupa el resumen gerencial y los modulos operativos en subpestanas.
+- Modo nocturno persistente desde la barra superior.
 
 ### 1. Backend
 

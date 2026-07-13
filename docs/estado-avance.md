@@ -39,10 +39,12 @@ La carpeta `Proyecto Final Gerencia de Recursos Humanos 1IL252 Grupo 6` ya conti
 
 ## Enfoque de producto y venta
 
-- Se agregaron pestañas de portada, solucion, quienes somos, manual de usuario y dashboard.
-- La portada presenta Talento 360 como producto de software para vender a gerencia.
-- La seccion de solucion explica que ofrece cada modulo.
-- Quienes somos incluye organigrama simple y funciones del equipo.
+- Se reorganizo el frontend en tres pestanas principales: Inicio, Solucion y Dashboard.
+- Se reforzo el lenguaje visual con una landing estilo producto SaaS inspirada en Play Astro y un dashboard administrativo inspirado en TailAdmin.
+- Se agrego modo nocturno persistente para mejorar la presentacion visual en clase o demo.
+- Inicio presenta Talento 360 como producto de software para vender a gerencia e integra portada, introduccion, organigrama y funciones del equipo.
+- Solucion explica que ofrece cada modulo e incluye el manual de usuario por modulo.
+- Dashboard agrupa el resumen gerencial y los modulos operativos en subpestanas.
 - El manual resume el uso de cada modulo y el tipo de marcado de asistencia.
 - Reclutamiento muestra vacantes abiertas, cantidades y puestos.
 - Desarrollo permite filtrar evaluaciones por colaborador y ver su porcentaje neto.
