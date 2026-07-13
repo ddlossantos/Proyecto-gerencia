@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Activity,
+  ArrowRight,
   BarChart3,
   BookOpenCheck,
   Brain,
@@ -8,16 +9,23 @@ import {
   Building2,
   CalendarCheck,
   ChevronRight,
+  CheckCircle2,
   ClipboardList,
   Database,
   FileSearch,
   Handshake,
+  HelpCircle,
   Home,
+  Layers3,
   LayoutDashboard,
   LogOut,
+  MonitorCheck,
+  Moon,
   PieChart as PieChartIcon,
   RefreshCw,
+  Settings2,
   ShieldCheck,
+  Sun,
   UserCheck,
   UsersRound,
 } from "lucide-react";
@@ -81,12 +89,14 @@ const fallbackColors = [
   "#16a34a",
 ];
 
-const navItems = [
-  { id: "home", label: "Portada", icon: Home },
+const mainTabs = [
+  { id: "home", label: "Inicio", icon: Home },
   { id: "solution", label: "Solucion", icon: Handshake },
-  { id: "team", label: "Quienes somos", icon: UserCheck },
-  { id: "manual", label: "Manual", icon: BookOpenCheck },
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+];
+
+const moduleTabs = [
+  { id: "overview", label: "Resumen", icon: PieChartIcon },
   { id: "recruitment", label: "Reclutamiento", icon: FileSearch },
   { id: "employees", label: "Personal", icon: UsersRound },
   { id: "daily", label: "Control diario", icon: CalendarCheck },
@@ -94,6 +104,56 @@ const navItems = [
   { id: "exit", label: "Salida", icon: LogOut },
   { id: "reports", label: "Reportes", icon: BarChart3 },
 ];
+
+const productModules = [
+  {
+    title: "Reclutamiento",
+    text: "Vacantes abiertas, recepcion de CVs, filtro por palabras clave y reporte de candidatos.",
+    icon: FileSearch,
+  },
+  {
+    title: "Personal",
+    text: "Expediente unico del colaborador con ingreso, puesto, departamento, estado y desempeno.",
+    icon: UsersRound,
+  },
+  {
+    title: "Control diario",
+    text: "Marcado web de asistencia por colaborador, con fecha, presente/ausente, ausencias y vacaciones.",
+    icon: CalendarCheck,
+  },
+  {
+    title: "Desarrollo",
+    text: "Capacitaciones y evaluaciones por usuario con porcentaje bruto y porcentaje neto.",
+    icon: Brain,
+  },
+  {
+    title: "Salida",
+    text: "Movimientos internos, promociones, traslados y salida definitiva documentada.",
+    icon: LogOut,
+  },
+  {
+    title: "Reportes",
+    text: "Indicadores para gerencia sobre plantilla, asistencia, rotacion, desempeno y departamentos.",
+    icon: BarChart3,
+  },
+];
+
+const chartTooltipProps = {
+  contentStyle: {
+    border: "1px solid var(--line)",
+    borderRadius: 8,
+    color: "var(--ink)",
+    background: "var(--card)",
+    boxShadow: "var(--shadow-sm)",
+  },
+  labelStyle: {
+    color: "var(--ink)",
+    fontWeight: 800,
+  },
+  itemStyle: {
+    color: "var(--ink)",
+  },
+};
 
 function colorForDepartment(name, index = 0) {
   return departmentPalette[name] || fallbackColors[index % fallbackColors.length];
@@ -122,38 +182,43 @@ function useAsync(loader, deps = []) {
 
 function App() {
   const [activePage, setActivePage] = useState("home");
+  const [activeModule, setActiveModule] = useState("overview");
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") {
+      return "light";
+    }
+    return window.localStorage.getItem("talento-theme") || "light";
+  });
   const [refreshKey, setRefreshKey] = useState(0);
   const refresh = () => setRefreshKey((value) => value + 1);
+  const isDarkTheme = theme === "dark";
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem("talento-theme", theme);
+  }, [theme]);
 
   const page = useMemo(() => {
-    const props = { refreshKey, refresh, setActivePage };
+    const props = { refreshKey, refresh, setActivePage, activeModule, setActiveModule };
     return {
       home: <HomePage {...props} />,
       solution: <SolutionPage {...props} />,
-      team: <TeamPage />,
-      manual: <ManualPage {...props} />,
-      dashboard: <DashboardPage {...props} />,
-      recruitment: <RecruitmentPage {...props} />,
-      employees: <EmployeesPage {...props} />,
-      daily: <DailyPage {...props} />,
-      development: <DevelopmentPage {...props} />,
-      exit: <ExitPage {...props} />,
-      reports: <ReportsPage {...props} />,
+      dashboard: <DashboardWorkspace {...props} />,
     }[activePage];
-  }, [activePage, refreshKey]);
+  }, [activePage, activeModule, refreshKey]);
 
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand">
-          <div className="brand-mark">RH</div>
+    <div className="product-shell">
+      <header className="topbar">
+        <button className="brand-button" onClick={() => setActivePage("home")}>
+          <div className="brand-mark">T360</div>
           <div>
-            <strong>Tao's Team</strong>
-            <span>Grupo 6</span>
+            <strong>Talento 360</strong>
+            <span>Grupo 6 | RRHH</span>
           </div>
-        </div>
-        <nav>
-          {navItems.map((item) => {
+        </button>
+        <nav className="main-nav" aria-label="Navegacion principal">
+          {mainTabs.map((item) => {
             const Icon = item.icon;
             return (
               <button
@@ -162,110 +227,379 @@ function App() {
                 onClick={() => setActivePage(item.id)}
               >
                 <Icon size={19} />
-                <span>{item.label}</span>
-                <ChevronRight size={15} />
+                {item.label}
               </button>
             );
           })}
         </nav>
-        <div className="sidebar-footer">
-          <Database size={18} />
-          <span>Software demo con 300 colaboradores</span>
+        <div className="topbar-actions">
+          <div className="topbar-badge">
+            <Database size={16} />
+            Demo con 300 colaboradores
+          </div>
+          <button
+            className="theme-toggle"
+            type="button"
+            aria-label={isDarkTheme ? "Activar modo claro" : "Activar modo nocturno"}
+            title={isDarkTheme ? "Modo claro" : "Modo nocturno"}
+            onClick={() => setTheme(isDarkTheme ? "light" : "dark")}
+          >
+            {isDarkTheme ? <Sun size={18} /> : <Moon size={18} />}
+            <span>{isDarkTheme ? "Claro" : "Nocturno"}</span>
+          </button>
         </div>
-      </aside>
+      </header>
       <main className="content">{page}</main>
     </div>
   );
 }
 
 function HomePage({ setActivePage }) {
+  const roles = [
+    ["Direccion del proyecto", "Coordina alcance, avances, integracion y defensa del producto."],
+    ["Analisis de RRHH", "Define procesos, reglas de negocio e indicadores por modulo."],
+    ["Diseno y experiencia", "Convierte el sistema en una presentacion clara, vendible y usable."],
+    ["Datos y backend", "Organiza la API, la base demo y los reportes para gerencia."],
+    ["Presentacion comercial", "Explica el valor de Talento 360 frente a la necesidad del cliente."],
+  ];
+
   return (
     <>
       <section className="hero-product">
-        <div>
-          <span className="eyebrow">Producto de software RRHH</span>
+        <div className="hero-copy">
+          <span className="eyebrow">Software de Recursos Humanos</span>
           <h1>Talento 360</h1>
           <p>
-            Plataforma integral para vender a gerencia una forma moderna de administrar
-            reclutamiento, expediente laboral, asistencia, desarrollo, salida y reportes.
+            Una plataforma modular para vender a gerencia una forma moderna de administrar
+            talento humano: reclutamiento, expediente laboral, asistencia, desarrollo,
+            salida y reportes en una sola experiencia.
           </p>
           <div className="hero-actions">
             <button className="primary-button standalone" onClick={() => setActivePage("solution")}>
               <Handshake size={17} />
               Ver solucion
+              <ArrowRight size={16} />
             </button>
             <button className="ghost-button" onClick={() => setActivePage("dashboard")}>
               <LayoutDashboard size={17} />
               Abrir dashboard
             </button>
           </div>
+          <div className="hero-proof">
+            <span><CheckCircle2 size={16} /> 6 modulos conectados</span>
+            <span><CheckCircle2 size={16} /> Data demo con 300 colaboradores</span>
+            <span><CheckCircle2 size={16} /> API FastAPI en ejecucion</span>
+          </div>
         </div>
-        <div className="hero-card">
-          <strong>Propuesta comercial</strong>
-          <span>Menos registros dispersos, menos errores y mas decisiones con datos.</span>
-          <div className="hero-stats">
-            <div><b>300</b><small>colaboradores</small></div>
-            <div><b>6</b><small>modulos</small></div>
-            <div><b>1</b><small>dashboard</small></div>
+        <div className="product-visual" aria-label="Vista conceptual del software">
+          <div className="visual-topline">
+            <span>Panel gerencial</span>
+            <b>Talento 360</b>
+          </div>
+          <div className="visual-kpis">
+            <div><strong>300</strong><span>Colaboradores</span></div>
+            <div><strong>94.6%</strong><span>Asistencia</span></div>
+            <div><strong>79.1%</strong><span>Desempeno</span></div>
+          </div>
+          <div className="visual-dashboard">
+            <div className="visual-chart">
+              <i style={{ height: "72%" }} />
+              <i style={{ height: "46%" }} />
+              <i style={{ height: "88%" }} />
+              <i style={{ height: "58%" }} />
+              <i style={{ height: "78%" }} />
+            </div>
+            <div className="visual-list">
+              <span><i /> Reclutamiento <b>10 vacantes</b></span>
+              <span><i /> Desarrollo <b>Por usuario</b></span>
+              <span><i /> Control diario <b>Marcado web</b></span>
+            </div>
+          </div>
+          <div className="visual-footer">
+            <span>Vacantes abiertas</span>
+            <strong>10 puestos</strong>
           </div>
         </div>
       </section>
-      <section className="info-grid">
-        <Panel title="Introduccion" subtitle="Problema que resuelve">
-          <p className="soft-text">
-            Muchas empresas gestionan RRHH con hojas separadas, correos y registros manuales.
-            Talento 360 centraliza el ciclo completo del colaborador y convierte la operacion
-            diaria en indicadores para gerencia.
+      <section className="logo-strip" aria-label="Beneficios clave">
+        {["Centralizacion", "Automatizacion", "Indicadores", "Trazabilidad"].map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+      </section>
+      <section className="story-section">
+        <div>
+          <span className="eyebrow">Introduccion</span>
+          <h2>De registros dispersos a una solucion integral</h2>
+        </div>
+        <p>
+          El proyecto parte de procesos tradicionales de Recursos Humanos que suelen vivir en
+          hojas, correos y archivos separados. Talento 360 une esos procesos en un producto
+          demostrable, con datos de ejemplo y una interfaz pensada para explicar valor, no solo
+          para capturar informacion.
+        </p>
+      </section>
+      <section className="feature-section">
+        <div className="section-heading centered">
+          <span className="eyebrow">Valor del producto</span>
+          <h2>Una propuesta lista para presentarse como software</h2>
+          <p>
+            La interfaz deja de sentirse como una entrega tecnica aislada y se presenta como
+            una solucion que un area de Recursos Humanos podria evaluar, comprar y usar.
           </p>
-        </Panel>
-        <Panel title="Cliente objetivo" subtitle="Empresa mediana">
-          <p className="soft-text">
-            La demo representa una empresa de 300 colaboradores que necesita controlar procesos
-            de talento humano sin duplicidad de informacion.
+        </div>
+        <div className="feature-grid">
+          {[
+            ["Menos datos dispersos", "Une colaboradores, asistencia, desarrollo y reportes en un flujo claro.", Database],
+            ["Gestion por modulo", "Cada pantalla explica su proposito y ofrece acciones concretas para operar.", Layers3],
+            ["Lectura gerencial", "El dashboard resume plantilla, departamentos, rotacion y desempeno.", MonitorCheck],
+          ].map(([title, text, Icon]) => (
+            <article className="feature-card" key={title}>
+              <div className="feature-icon"><Icon size={22} /></div>
+              <strong>{title}</strong>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="story-section">
+        <div>
+          <span className="eyebrow">Organigrama</span>
+          <h2>Como se presenta el producto ante gerencia</h2>
+        </div>
+        <div className="org-chart">
+          <div className="org-node main">Gerencia / Cliente</div>
+          <div className="org-line" />
+          <div className="org-children">
+            <div className="org-node">Talento 360</div>
+            <div className="org-node">Equipo Grupo 6</div>
+            <div className="org-node">Usuarios RRHH</div>
+          </div>
+        </div>
+      </section>
+      <section className="process-section">
+        <div className="section-heading">
+          <span className="eyebrow">Recorrido comercial</span>
+          <h2>Como se vende la solucion</h2>
+        </div>
+        <div className="process-grid">
+          {[
+            ["01", "Problema", "Procesos manuales, registros duplicados y poca visibilidad para gerencia."],
+            ["02", "Producto", "Talento 360 centraliza el ciclo de vida del colaborador."],
+            ["03", "Evidencia", "La demo muestra datos, formularios, graficas y modulos funcionando."],
+            ["04", "Decision", "Gerencia puede ver beneficios operativos y KPIs desde el dashboard."],
+          ].map(([number, title, text]) => (
+            <article className="process-card" key={number}>
+              <span>{number}</span>
+              <strong>{title}</strong>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="roles-section">
+        <div className="section-heading">
+          <span className="eyebrow">Quienes somos</span>
+          <h2>Funciones de integrantes</h2>
+          <p>Estos cargos son de ejemplo y quedan listos para reemplazar por nombres reales.</p>
+        </div>
+        <div className="role-grid">
+          {roles.map(([role, description]) => (
+            <article className="role-card" key={role}>
+              <strong>{role}</strong>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="cta-panel">
+        <div>
+          <span className="eyebrow">Demo ejecutable</span>
+          <h2>Del discurso al sistema funcionando</h2>
+          <p>
+            Abre el dashboard para mostrar los modulos operativos, filtros, vacantes,
+            evaluaciones por usuario y reportes conectados al backend.
           </p>
-        </Panel>
-        <Panel title="Resultado esperado" subtitle="Software en ejecucion">
-          <p className="soft-text">
-            El producto se muestra como una aplicacion web con frontend, API, datos demo,
-            formularios, reportes y flujo completo por modulo.
-          </p>
-        </Panel>
+        </div>
+        <button className="primary-button standalone" onClick={() => setActivePage("dashboard")}>
+          <LayoutDashboard size={18} />
+          Ir al dashboard
+        </button>
       </section>
     </>
   );
 }
 
 function SolutionPage({ setActivePage }) {
-  const modules = [
-    ["Reclutamiento", "Vacantes, recepcion de CVs, filtros por palabras clave y reporte de candidatos."],
-    ["Personal", "Expediente unico del colaborador, ingreso, puesto, departamento y estado."],
-    ["Control diario", "Marcado web de asistencia por colaborador, fecha y estado. Puede evolucionar a QR, biometria o geolocalizacion."],
-    ["Desarrollo", "Capacitaciones y evaluaciones de desempeno por colaborador con porcentaje neto."],
-    ["Salida", "Movimientos internos, promociones, traslados y salida definitiva documentada."],
-    ["Reportes", "KPIs para gerencia: plantilla, asistencia, rotacion, desempeno y departamentos."],
+  const faqs = [
+    ["Que tipo de asistencia utiliza?", "La demo usa marcado web por formulario: colaborador, fecha y estado. En produccion puede ampliarse a QR, biometria o geolocalizacion."],
+    ["Los datos son reales?", "Son datos demo generados para presentar el sistema con volumen suficiente sin exponer informacion sensible."],
+    ["Que vende Talento 360?", "Vende orden, trazabilidad y reportes ejecutivos para mejorar la gestion de Recursos Humanos."],
+    ["El dashboard es general o por usuario?", "Incluye KPIs generales y evaluacion individual por colaborador en el modulo de Desarrollo."],
   ];
+
   return (
     <>
-      <PageHeader
-        eyebrow="Producto / solucion"
-        title="Que ofrece Talento 360"
-        description="Una solucion modular para digitalizar procesos de Recursos Humanos y defenderla como producto viable."
-        actions={<button className="ghost-button" onClick={() => setActivePage("manual")}><BookOpenCheck size={16} />Ver manual</button>}
-      />
-      <section className="metric-grid three">
-        <MetricCard label="Automatizacion" value="6 modulos" detail="Procesos conectados" icon={Building2} />
-        <MetricCard label="Decisiones" value="KPIs" detail="Dashboard gerencial" icon={BarChart3} tone="cyan" />
-        <MetricCard label="Trazabilidad" value="360" detail="Ciclo completo" icon={ShieldCheck} tone="green" />
+      <section className="solution-hero">
+        <div>
+          <span className="eyebrow">Producto / solucion</span>
+          <h1>Un sistema modular para gestionar talento humano</h1>
+          <p>
+            Talento 360 combina manual de uso, propuesta comercial y modulos operativos
+            para que la defensa se sienta como la presentacion de un producto real.
+          </p>
+          <div className="hero-actions">
+            <button className="primary-button standalone" onClick={() => setActivePage("dashboard")}>
+              <LayoutDashboard size={17} />
+              Ver dashboard
+            </button>
+            <button className="ghost-button" onClick={() => setActivePage("home")}>
+              <Home size={17} />
+              Volver al inicio
+            </button>
+          </div>
+        </div>
+        <div className="solution-summary">
+          <div><strong>6</strong><span>modulos funcionales</span></div>
+          <div><strong>300</strong><span>colaboradores demo</span></div>
+          <div><strong>1</strong><span>dashboard gerencial</span></div>
+        </div>
       </section>
       <section className="module-guide">
-        {modules.map(([title, text]) => (
+        {productModules.map(({ title, text, icon: Icon }) => (
           <article key={title} className="module-card">
+            <div className="module-icon"><Icon size={20} /></div>
             <span>{title}</span>
             <p>{text}</p>
           </article>
         ))}
       </section>
+      <section className="manual-section">
+        <div className="section-heading">
+          <span className="eyebrow">Manual de usuario</span>
+          <h2>Recorrido por modulo</h2>
+          <p>Guia breve para presentar como se usa el sistema durante la defensa.</p>
+        </div>
+        <ManualSteps />
+      </section>
+      <section className="faq-section">
+        <div className="section-heading centered">
+          <span className="eyebrow">Preguntas de defensa</span>
+          <h2>Respuestas rapidas para explicar el producto</h2>
+        </div>
+        <div className="faq-grid">
+          {faqs.map(([title, text]) => (
+            <article className="faq-card" key={title}>
+              <div className="faq-icon"><HelpCircle size={20} /></div>
+              <div>
+                <strong>{title}</strong>
+                <p>{text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="cta-panel">
+        <div>
+          <span className="eyebrow">Producto listo para demo</span>
+          <h2>Ahora toca mostrarlo como software, no como tareas sueltas</h2>
+          <p>
+            Usa el dashboard para demostrar vacantes, desempeno por usuario,
+            asistencia y reportes con datos conectados.
+          </p>
+        </div>
+        <button className="primary-button standalone" onClick={() => setActivePage("dashboard")}>
+          <MonitorCheck size={18} />
+          Abrir demo
+        </button>
+      </section>
     </>
+  );
+}
+
+function ManualSteps() {
+  const steps = [
+    ["Reclutamiento", "Revisar vacantes abiertas, cargar CVs, aplicar filtro por palabras clave y consultar candidatos."],
+    ["Personal", "Registrar colaborador, asignar departamento y consultar plantilla filtrando por estado o area."],
+    ["Control diario", "Marcar asistencia desde formulario web. Registra fecha, colaborador y presente/ausente; ausencias incluyen motivo."],
+    ["Desarrollo", "Seleccionar colaborador, registrar capacitacion o evaluacion y ver su porcentaje de desempeno."],
+    ["Salida", "Registrar movimiento interno o salida definitiva con fecha, motivo y observaciones."],
+    ["Reportes", "Consultar KPIs, graficas y datos consolidados para tomar decisiones."],
+  ];
+
+  return (
+    <section className="manual-list">
+      {steps.map(([title, text], index) => (
+        <article key={title} className="manual-step">
+          <strong>{index + 1}</strong>
+          <div>
+            <span>{title}</span>
+            <p>{text}</p>
+          </div>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+function DashboardWorkspace({ refreshKey, refresh, activeModule, setActiveModule }) {
+  const modulePages = {
+    overview: <DashboardPage refreshKey={refreshKey} refresh={refresh} />,
+    recruitment: <RecruitmentPage refreshKey={refreshKey} refresh={refresh} />,
+    employees: <EmployeesPage refreshKey={refreshKey} refresh={refresh} />,
+    daily: <DailyPage refreshKey={refreshKey} refresh={refresh} />,
+    development: <DevelopmentPage refreshKey={refreshKey} refresh={refresh} />,
+    exit: <ExitPage refreshKey={refreshKey} refresh={refresh} />,
+    reports: <ReportsPage refreshKey={refreshKey} refresh={refresh} />,
+  };
+
+  return (
+    <div className="admin-shell">
+      <aside className="admin-sidebar">
+        <div className="admin-brand">
+          <div className="brand-mark">T360</div>
+          <div>
+            <strong>Talento 360</strong>
+            <span>Admin workspace</span>
+          </div>
+        </div>
+        <nav className="admin-nav" aria-label="Modulos del dashboard">
+          {moduleTabs.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                className={activeModule === item.id ? "active" : ""}
+                key={item.id}
+                onClick={() => setActiveModule(item.id)}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+                <ChevronRight size={15} />
+              </button>
+            );
+          })}
+        </nav>
+        <div className="admin-sidebar-card">
+          <Settings2 size={18} />
+          <strong>Demo operativa</strong>
+          <span>FastAPI + React con datos generados para presentacion.</span>
+        </div>
+      </aside>
+      <section className="admin-main">
+        <div className="admin-topbar">
+          <div>
+            <span className="eyebrow">Panel administrativo</span>
+            <strong>{moduleTabs.find((item) => item.id === activeModule)?.label || "Dashboard"}</strong>
+          </div>
+          <div className="admin-actions">
+            <span><Database size={16} /> 300 colaboradores</span>
+            <button className="ghost-button" onClick={refresh}><RefreshCw size={16} />Actualizar</button>
+          </div>
+        </div>
+        <div className="admin-content">
+          {modulePages[activeModule]}
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -372,7 +706,7 @@ function DashboardPage({ refreshKey, refresh }) {
               <Pie data={departmentData} dataKey="value" nameKey="name" innerRadius={62} outerRadius={105} paddingAngle={2}>
                 {departmentData.map((item) => <Cell key={item.name} fill={item.color} />)}
               </Pie>
-              <Tooltip />
+              <Tooltip {...chartTooltipProps} />
             </PieChart>
           </ResponsiveContainer>
           <DepartmentLegend items={departmentData} />
@@ -383,7 +717,7 @@ function DashboardPage({ refreshKey, refresh }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="departamento" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={80} />
               <YAxis domain={[0, 100]} />
-              <Tooltip />
+              <Tooltip {...chartTooltipProps} />
               <Bar dataKey="promedio" radius={[8, 8, 0, 0]}>
                 {performanceData.map((item) => <Cell key={item.departamento} fill={item.color} />)}
               </Bar>
@@ -402,7 +736,7 @@ function DashboardPage({ refreshKey, refresh }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="departamento" tick={{ fontSize: 11 }} interval={0} angle={-15} textAnchor="end" height={70} />
               <YAxis domain={[80, 100]} />
-              <Tooltip />
+              <Tooltip {...chartTooltipProps} />
               <Area type="monotone" dataKey="asistencia" stroke="#059669" fill="url(#attendance)" strokeWidth={3} />
             </AreaChart>
           </ResponsiveContainer>
@@ -887,7 +1221,7 @@ function ReportsPage({ refreshKey, refresh }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="mes" />
               <YAxis />
-              <Tooltip />
+              <Tooltip {...chartTooltipProps} />
               <Bar dataKey="salidas" fill="#0f766e" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -898,7 +1232,7 @@ function ReportsPage({ refreshKey, refresh }) {
               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
               <XAxis type="number" />
               <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 11 }} />
-              <Tooltip />
+              <Tooltip {...chartTooltipProps} />
               <Bar dataKey="value" radius={[0, 8, 8, 0]}>
                 {departmentData.map((item) => <Cell key={item.name} fill={item.color} />)}
               </Bar>
