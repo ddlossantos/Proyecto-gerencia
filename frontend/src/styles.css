@@ -1000,6 +1000,12 @@ h2 {
 .panel {
   min-width: 0;
   padding: 18px;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.panel:hover {
+  border-color: color-mix(in srgb, var(--primary) 24%, var(--line));
+  box-shadow: var(--shadow-md);
 }
 
 .panel-heading {
@@ -1022,31 +1028,129 @@ h2 {
   font-size: 0.92rem;
 }
 
-.department-legend {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 8px;
+.chart-insight {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+  min-height: 46px;
+  margin-bottom: 8px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--soft), color-mix(in srgb, var(--card) 82%, var(--primary) 18%));
 }
 
-.department-legend span {
+.chart-insight span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.chart-insight strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 0.86rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chart-insight b {
+  color: var(--primary);
+  font-size: 0.88rem;
+}
+
+.distribution-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(260px, 1.1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.donut-chart {
+  min-width: 0;
+}
+
+.donut-total-value {
+  fill: var(--ink);
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+.donut-total-label {
+  fill: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.chart-value-label {
+  fill: var(--ink);
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: var(--muted);
+}
+
+.recharts-cartesian-grid line {
+  stroke: var(--line);
+  stroke-opacity: 0.72;
+}
+
+.department-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.department-legend-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 8px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--soft);
+}
+
+.department-legend-item span {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 30px;
-  padding: 0 9px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  grid-column: 1 / -1;
+  min-width: 0;
+  overflow: hidden;
   color: var(--nav-text);
-  background: var(--soft);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.department-legend i {
-  width: 10px;
-  height: 10px;
+.department-legend-item i {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
   border-radius: 999px;
+}
+
+.department-legend-item strong {
+  color: var(--ink);
+  font-size: 0.88rem;
+}
+
+.department-legend-item small {
+  justify-self: end;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
 }
 
 .vacancy-grid {
@@ -1232,6 +1336,28 @@ tr:last-child td {
 .badge-warn {
   color: var(--warning-ink);
   background: var(--warning-soft);
+}
+
+.table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.compact-button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--soft);
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.compact-button.danger {
+  color: var(--danger-ink);
+  background: var(--danger-soft);
 }
 
 .notice {
@@ -1422,6 +1548,22 @@ tr:last-child td {
 }
 
 @media (max-width: 520px) {
+  .distribution-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-insight {
+    grid-template-columns: 1fr auto;
+  }
+
+  .chart-insight span {
+    grid-column: 1 / -1;
+  }
+
+  .department-legend {
+    grid-template-columns: 1fr;
+  }
+
   .topbar-actions {
     grid-template-columns: 1fr;
   }

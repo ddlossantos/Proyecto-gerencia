@@ -36,6 +36,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -62,15 +63,15 @@ const today = new Date().toISOString().slice(0, 10);
 const departmentPalette = {
   Calidad: "#0f766e",
   Compras: "#2563eb",
-  "Direccion General": "#7c3aed",
+  "Dirección General": "#7c3aed",
   Finanzas: "#f59e0b",
   Legal: "#dc2626",
-  Logistica: "#0891b2",
+  Logística: "#0891b2",
   Marketing: "#65a30d",
   Operaciones: "#be185d",
   "Recursos Humanos": "#0d9488",
   "Servicio al Cliente": "#9333ea",
-  Tecnologia: "#ea580c",
+  Tecnología: "#ea580c",
   Ventas: "#16a34a",
 };
 
@@ -108,7 +109,7 @@ const moduleTabs = [
 const productModules = [
   {
     title: "Reclutamiento",
-    text: "Vacantes abiertas, recepción de CVs, filtro por palabras clave y reporte de candidatos.",
+    text: "Vacantes abiertas, recepción de CV, filtro por palabras clave y reporte de candidatos.",
     icon: FileSearch,
   },
   {
@@ -157,6 +158,20 @@ const chartTooltipProps = {
 
 function colorForDepartment(name, index = 0) {
   return departmentPalette[name] || fallbackColors[index % fallbackColors.length];
+}
+
+const integerFormatter = new Intl.NumberFormat("es-PA", { maximumFractionDigits: 0 });
+const decimalFormatter = new Intl.NumberFormat("es-PA", {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+
+function formatPercentage(value) {
+  return `${decimalFormatter.format(Number(value) || 0)}%`;
+}
+
+function formatInteger(value) {
+  return integerFormatter.format(Number(value) || 0);
 }
 
 function useAsync(loader, deps = []) {
@@ -217,7 +232,7 @@ function App() {
             <span>Grupo 6 | RRHH</span>
           </div>
         </button>
-        <nav className="main-nav" aria-label="Navegacion principal">
+        <nav className="main-nav" aria-label="Navegación principal">
           {mainTabs.map((item) => {
             const Icon = item.icon;
             return (
@@ -256,9 +271,9 @@ function App() {
 
 function HomePage({ setActivePage }) {
   const roles = [
-    ["Dirección del proyecto", "Coordina alcance, avances, integracion y defensa del producto."],
-    ["Análisis de RRHH", "Define procesos, reglas de negocio e indicadores por módulo."],
-    ["Diseño y experiencia", "Convierte el sistema en una presentación clara, vendible y usable."],
+    ["Dirección del proyecto", "Coordina alcance, avances, integración y defensa del producto."],
+    ["Análisis de RR. HH.", "Define procesos, reglas de negocio e indicadores por módulo."],
+    ["Diseño y experiencia", "Convierte el sistema en una presentación clara, vendible y fácil de usar."],
     ["Datos y backend", "Organiza la API, la base demo y los reportes para gerencia."],
     ["Presentación comercial", "Explica el valor de Talento 360 frente a la necesidad del cliente."],
   ];
@@ -288,7 +303,7 @@ function HomePage({ setActivePage }) {
           <div className="hero-proof">
             <span><CheckCircle2 size={16} /> 6 módulos conectados</span>
             <span><CheckCircle2 size={16} /> Data demo con 300 colaboradores</span>
-            <span><CheckCircle2 size={16} /> API FastAPI en ejecución</span>
+            <span><CheckCircle2 size={16} /> API FastAPI en ejecucion</span>
           </div>
         </div>
         <div className="product-visual" aria-label="Vista conceptual del software">
@@ -322,7 +337,7 @@ function HomePage({ setActivePage }) {
         </div>
       </section>
       <section className="logo-strip" aria-label="Beneficios clave">
-        {["Centralización", "Automatización", "Indicadores", "Trazabilidad"].map((item) => (
+          {["Centralización", "Automatización", "Indicadores", "Trazabilidad"].map((item) => (
           <span key={item}>{item}</span>
         ))}
       </section>
@@ -364,7 +379,7 @@ function HomePage({ setActivePage }) {
       <section className="story-section">
         <div>
           <span className="eyebrow">Organigrama</span>
-          <h2>Como se presenta el producto ante gerencia</h2>
+          <h2>Cómo se presenta el producto ante gerencia</h2>
         </div>
         <div className="org-chart">
           <div className="org-node main">Gerencia / Cliente</div>
@@ -379,14 +394,14 @@ function HomePage({ setActivePage }) {
       <section className="process-section">
         <div className="section-heading">
           <span className="eyebrow">Recorrido comercial</span>
-          <h2>Como se vende la solución</h2>
+          <h2>Cómo se vende la solución</h2>
         </div>
         <div className="process-grid">
           {[
             ["01", "Problema", "Procesos manuales, registros duplicados y poca visibilidad para gerencia."],
             ["02", "Producto", "Talento 360 centraliza el ciclo de vida del colaborador."],
-            ["03", "Evidencia", "La demo muestra datos, formularios, gráficas y módulos funcionando."],
-            ["04", "Decisión", "Gerencia puede ver beneficios operativos y KPIs desde el dashboard."],
+            ["03", "Evidencia", "La demostración muestra datos, formularios, gráficas y módulos funcionando."],
+            ["04", "Decisión", "Gerencia puede ver beneficios operativos y KPI desde el dashboard."],
           ].map(([number, title, text]) => (
             <article className="process-card" key={number}>
               <span>{number}</span>
@@ -431,10 +446,10 @@ function HomePage({ setActivePage }) {
 
 function SolutionPage({ setActivePage }) {
   const faqs = [
-    ["¿Qué tipo de asistencia utiliza?", "La demo usa marcado web por formulario: colaborador, fecha y estado. En producción puede ampliarse a QR, biometría o geolocalización."],
-    ["¿Los datos son reales?", "Son datos demo generados para presentar el sistema con volumen suficiente sin exponer información sensible."],
+    ["¿Qué tipo de asistencia utiliza?", "La demostración usa marcado web por formulario: colaborador, fecha y estado. En producción puede ampliarse a QR, biometría o geolocalización."],
+    ["¿Los datos son reales?", "Son datos de demostración generados para presentar el sistema con volumen suficiente sin exponer información sensible."],
     ["¿Qué vende Talento 360?", "Vende orden, trazabilidad y reportes ejecutivos para mejorar la gestión de Recursos Humanos."],
-    ["¿El dashboard es general o por usuario?", "Incluye KPIs generales y evaluación individual por colaborador en el módulo de Desarrollo."],
+    ["¿El dashboard es general o por usuario?", "Incluye KPI generales y evaluación individual por colaborador en el módulo de Desarrollo."],
   ];
 
   return (
@@ -477,14 +492,14 @@ function SolutionPage({ setActivePage }) {
         <div className="section-heading">
           <span className="eyebrow">Manual de usuario</span>
           <h2>Recorrido por módulo</h2>
-          <p>Guía breve para presentar como se usa el sistema durante la defensa.</p>
+          <p>Guía breve para presentar cómo se usa el sistema durante la defensa.</p>
         </div>
         <ManualSteps />
       </section>
       <section className="faq-section">
         <div className="section-heading centered">
           <span className="eyebrow">Preguntas de defensa</span>
-          <h2>Respuestas rápidas para explicar el producto</h2>
+          <h2>Respuestas rapidas para explicar el producto</h2>
         </div>
         <div className="faq-grid">
           {faqs.map(([title, text]) => (
@@ -519,11 +534,11 @@ function SolutionPage({ setActivePage }) {
 function ManualSteps() {
   const steps = [
     ["Reclutamiento", "Revisar vacantes abiertas, cargar CVs, aplicar filtro por palabras clave y consultar candidatos."],
-    ["Personal", "Registrar colaborador, asignar departamento y consultar plantilla filtrando por estado o área."],
+    ["Personal", "Registrar un colaborador, asignar un departamento y consultar la plantilla por estado o área."],
     ["Control diario", "Marcar asistencia desde formulario web. Registra fecha, colaborador y presente/ausente; ausencias incluyen motivo."],
-    ["Desarrollo", "Seleccionar colaborador, registrar capacitación o evaluación y ver su porcentaje de desempeño."],
+    ["Desarrollo", "Seleccionar un colaborador, registrar una capacitación o evaluación y ver su porcentaje de desempeño."],
     ["Salida", "Registrar movimiento interno o salida definitiva con fecha, motivo y observaciones."],
-    ["Reportes", "Consultar KPIs, gráficas y datos consolidados para tomar decisiones."],
+    ["Reportes", "Consultar KPI, gráficas y datos consolidados para tomar decisiones."],
   ];
 
   return (
@@ -562,7 +577,7 @@ function DashboardWorkspace({ refreshKey, refresh, activeModule, setActiveModule
             <span>Admin workspace</span>
           </div>
         </div>
-        <nav className="admin-nav" aria-label="Modulos del dashboard">
+        <nav className="admin-nav" aria-label="Módulos del dashboard">
           {moduleTabs.map((item) => {
             const Icon = item.icon;
             return (
@@ -581,7 +596,7 @@ function DashboardWorkspace({ refreshKey, refresh, activeModule, setActiveModule
         <div className="admin-sidebar-card">
           <Settings2 size={18} />
           <strong>Demo operativa</strong>
-          <span>FastAPI + React con datos generados para presentación.</span>
+          <span>FastAPI + React con datos generados para la presentación.</span>
         </div>
       </aside>
       <section className="admin-main">
@@ -605,16 +620,16 @@ function DashboardWorkspace({ refreshKey, refresh, activeModule, setActiveModule
 
 function TeamPage() {
   const roles = [
-    ["Lider del proyecto", "Coordina avances, alcance, integracion y presentacion final."],
+    ["Líder del proyecto", "Coordina avances, alcance, integración y presentación final."],
     ["Analista de RRHH", "Define procesos, indicadores y reglas de negocio."],
-    ["Disenador", "Organiza pantallas, experiencia visual y claridad de la demo."],
+    ["Diseñador", "Organiza pantallas, experiencia visual y claridad de la demostración."],
     ["Encargado de datos", "Estructura la base, valida datos demo y reportes."],
-    ["Presentador", "Vende la solucion, explica beneficios y conduce la defensa."],
+    ["Presentador", "Expone la solución, explica sus beneficios y conduce la defensa."],
   ];
   return (
     <>
       <PageHeader
-        eyebrow="Quienes somos"
+        eyebrow="Quiénes somos"
         title="Equipo, roles y organigrama"
         description="El proyecto se presenta como una propuesta de software desarrollada por un equipo con funciones claras."
       />
@@ -640,18 +655,18 @@ function TeamPage() {
 function ManualPage({ setActivePage }) {
   const steps = [
     ["Reclutamiento", "Revisar vacantes abiertas, cargar CVs, aplicar filtro por palabras clave y consultar candidatos."],
-    ["Personal", "Registrar colaborador, asignar departamento y consultar plantilla filtrando por estado o area."],
+    ["Personal", "Registrar un colaborador, asignar un departamento y consultar la plantilla por estado o área."],
     ["Control diario", "Marcar asistencia desde formulario web. Registra fecha, colaborador y presente/ausente; ausencias incluyen motivo."],
-    ["Desarrollo", "Seleccionar colaborador, registrar capacitacion o evaluacion y ver su porcentaje de desempeno."],
+    ["Desarrollo", "Seleccionar un colaborador, registrar una capacitación o evaluación y ver su porcentaje de desempeño."],
     ["Salida", "Registrar movimiento interno o salida definitiva con fecha, motivo y observaciones."],
-    ["Reportes", "Consultar KPIs, graficas y datos consolidados para tomar decisiones."],
+    ["Reportes", "Consultar KPI, gráficas y datos consolidados para tomar decisiones."],
   ];
   return (
     <>
       <PageHeader
         eyebrow="Manual de usuario"
-        title="Uso por modulo"
-        description="Guia breve para explicar el recorrido durante la demostracion del producto."
+        title="Uso por módulo"
+        description="Guía breve para explicar el recorrido durante la demostración del producto."
         actions={<button className="ghost-button" onClick={() => setActivePage("dashboard")}><LayoutDashboard size={16} />Ir al dashboard</button>}
       />
       <section className="manual-list">
@@ -684,6 +699,15 @@ function DashboardPage({ refreshKey, refresh }) {
     ...item,
     color: colorForDepartment(item.departamento, index),
   }));
+  const departmentTotal = departmentData.reduce((total, item) => total + item.value, 0);
+  const largestDepartment = departmentData.reduce(
+    (largest, item) => (!largest || item.value > largest.value ? item : largest),
+    null,
+  );
+  const topPerformance = performanceData.reduce(
+    (highest, item) => (!highest || item.promedio > highest.promedio ? item : highest),
+    null,
+  );
 
   return (
     <>
@@ -701,32 +725,81 @@ function DashboardPage({ refreshKey, refresh }) {
       </section>
       <section className="dashboard-grid">
         <Panel title="Distribución por departamento" subtitle="Plantilla actual por área">
-          <ResponsiveContainer width="100%" height={310}>
-            <PieChart>
-              <Pie data={departmentData} dataKey="value" nameKey="name" innerRadius={62} outerRadius={105} paddingAngle={2}>
-                {departmentData.map((item) => <Cell key={item.name} fill={item.color} />)}
-              </Pie>
-              <Tooltip {...chartTooltipProps} />
-            </PieChart>
-          </ResponsiveContainer>
-          <DepartmentLegend items={departmentData} />
+          <div className="chart-insight">
+            <span>Área con mayor plantilla</span>
+            <strong>{largestDepartment?.name || "Sin datos"}</strong>
+            <b>{formatInteger(largestDepartment?.value)} colaboradores</b>
+          </div>
+          <div className="distribution-layout">
+            <div className="donut-chart">
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie
+                    data={departmentData}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={72}
+                    outerRadius={108}
+                    paddingAngle={2}
+                    stroke="var(--card)"
+                    strokeWidth={2}
+                  >
+                    {departmentData.map((item) => <Cell key={item.name} fill={item.color} />)}
+                  </Pie>
+                  <text x="50%" y="46%" textAnchor="middle" className="donut-total-value">
+                    {formatInteger(departmentTotal)}
+                  </text>
+                  <text x="50%" y="55%" textAnchor="middle" className="donut-total-label">
+                    colaboradores
+                  </text>
+                  <Tooltip
+                    {...chartTooltipProps}
+                    formatter={(value, name) => [
+                      `${formatInteger(value)} · ${formatPercentage((value / departmentTotal) * 100)}`,
+                      name,
+                    ]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <DepartmentLegend items={departmentData} total={departmentTotal} />
+          </div>
         </Panel>
         <Panel title="Desempeño por departamento" subtitle="Promedio neto de evaluación">
+          <div className="chart-insight">
+            <span>Mejor resultado</span>
+            <strong>{topPerformance?.departamento || "Sin datos"}</strong>
+            <b>{formatPercentage(topPerformance?.promedio)}</b>
+          </div>
           <ResponsiveContainer width="100%" height={340}>
-            <BarChart data={performanceData}>
+            <BarChart data={performanceData} margin={{ top: 26, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="departamento" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={80} />
-              <YAxis domain={[0, 100]} />
-              <Tooltip {...chartTooltipProps} />
-              <Bar dataKey="promedio" radius={[8, 8, 0, 0]}>
+              <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} axisLine={false} tickLine={false} />
+              <Tooltip
+                {...chartTooltipProps}
+                formatter={(value) => [formatPercentage(value), "Desempeño promedio"]}
+              />
+              <Bar dataKey="promedio" radius={[8, 8, 0, 0]} maxBarSize={42}>
                 {performanceData.map((item) => <Cell key={item.departamento} fill={item.color} />)}
+                <LabelList
+                  dataKey="promedio"
+                  position="top"
+                  formatter={formatPercentage}
+                  className="chart-value-label"
+                />
               </Bar>
             </BarChart>
           </ResponsiveContainer>
         </Panel>
         <Panel title="Asistencia por departamento" subtitle="Porcentaje de presencia registrada" className="wide-panel">
+          <div className="chart-insight">
+            <span>Promedio general</span>
+            <strong>Asistencia registrada</strong>
+            <b>{formatPercentage(summary.tasa_asistencia)}</b>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={data.attendance_by_department}>
+            <AreaChart data={data.attendance_by_department} margin={{ top: 30, right: 14, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="attendance" x1="0" x2="0" y1="0" y2="1">
                   <stop offset="5%" stopColor="#10b981" stopOpacity={0.6} />
@@ -735,9 +808,27 @@ function DashboardPage({ refreshKey, refresh }) {
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="departamento" tick={{ fontSize: 11 }} interval={0} angle={-15} textAnchor="end" height={70} />
-              <YAxis domain={[80, 100]} />
-              <Tooltip {...chartTooltipProps} />
-              <Area type="monotone" dataKey="asistencia" stroke="#059669" fill="url(#attendance)" strokeWidth={3} />
+              <YAxis domain={[80, 100]} tickFormatter={(value) => `${value}%`} axisLine={false} tickLine={false} />
+              <Tooltip
+                {...chartTooltipProps}
+                formatter={(value) => [formatPercentage(value), "Asistencia"]}
+              />
+              <Area
+                type="monotone"
+                dataKey="asistencia"
+                stroke="#10b981"
+                fill="url(#attendance)"
+                strokeWidth={3}
+                dot={{ r: 4, fill: "#10b981", stroke: "var(--card)", strokeWidth: 2 }}
+                activeDot={{ r: 6 }}
+              >
+                <LabelList
+                  dataKey="asistencia"
+                  position="top"
+                  formatter={formatPercentage}
+                  className="chart-value-label"
+                />
+              </Area>
             </AreaChart>
           </ResponsiveContainer>
         </Panel>
@@ -746,9 +837,34 @@ function DashboardPage({ refreshKey, refresh }) {
   );
 }
 
-function RecruitmentPage({ refreshKey }) {
+function RecruitmentPage({ refreshKey, refresh }) {
   const recruitment = useAsync(api.getRecruitment, [refreshKey]);
   const vacancies = useAsync(api.getVacancies, [refreshKey]);
+  const [cvFile, setCvFile] = useState(null);
+  const [keywords, setKeywords] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [uploadError, setUploadError] = useState("");
+
+  async function analyzeCv(event) {
+    event.preventDefault();
+    if (!cvFile) return;
+    const formElement = event.currentTarget;
+    setUploading(true);
+    setMessage("");
+    setUploadError("");
+    try {
+      const result = await api.analyzeCv(cvFile, keywords);
+      setMessage(`Hoja de vida analizada: ${result.porcentaje}% de coincidencia.`);
+      setCvFile(null);
+      formElement.reset();
+      refresh();
+    } catch (err) {
+      setUploadError(err.message);
+    } finally {
+      setUploading(false);
+    }
+  }
 
   if (recruitment.loading || vacancies.loading) return <LoadingScreen />;
   if (recruitment.error) return <ErrorScreen error={recruitment.error} />;
@@ -787,8 +903,32 @@ function RecruitmentPage({ refreshKey }) {
           ))}
         </div>
       </Panel>
-      <Panel title="Reporte de candidatos" subtitle="Datos provenientes del módulo de reclutamiento existente">
-        <DataTable columns={columns} rows={records} emptyText="Aun no hay reporte CSV de reclutamiento." />
+      <Panel
+        title="Analizar hoja de vida"
+        subtitle="Carga un archivo PDF o TXT de hasta 5 MB"
+      >
+        <Notice>{message}</Notice>
+        <Notice type="error">{uploadError}</Notice>
+        <FormGrid onSubmit={analyzeCv} busy={uploading} buttonLabel="Analizar candidatura">
+          <Field label="Hoja de vida">
+            <input
+              type="file"
+              accept=".pdf,.txt,application/pdf,text/plain"
+              required
+              onChange={(event) => setCvFile(event.target.files?.[0] || null)}
+            />
+          </Field>
+          <Field label="Palabras clave opcionales">
+            <input
+              value={keywords}
+              onChange={(event) => setKeywords(event.target.value)}
+              placeholder="Python, análisis de datos, Excel"
+            />
+          </Field>
+        </FormGrid>
+      </Panel>
+      <Panel title="Reporte de candidatos" subtitle="Datos provenientes del módulo de reclutamiento">
+        <DataTable columns={columns} rows={records} emptyText="Aún no hay un reporte CSV de reclutamiento." />
       </Panel>
     </>
   );
@@ -801,6 +941,14 @@ function EmployeesPage({ refreshKey, refresh }) {
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [departmentMessage, setDepartmentMessage] = useState("");
+  const [departmentError, setDepartmentError] = useState("");
+  const [savingDepartment, setSavingDepartment] = useState(false);
+  const [departmentForm, setDepartmentForm] = useState({
+    id_departamento: null,
+    nombre_departamento: "",
+    descripcion: "",
+  });
   const departments = useAsync(api.getDepartments, [refreshKey]);
   const employees = useAsync(() => api.getEmployees({ q: query, status, department_id: department, limit: 150 }), [query, status, department, refreshKey]);
   const [form, setForm] = useState({
@@ -808,8 +956,8 @@ function EmployeesPage({ refreshKey, refresh }) {
     nombre: "",
     apellido: "",
     fecha_nacimiento: "1995-01-01",
-    nacionalidad: "Panamena",
-    direccion: "Ciudad de Panama",
+    nacionalidad: "Panameña",
+    direccion: "Ciudad de Panamá",
     telefono_principal: "6000-0000",
     fecha_ingreso: today,
     puesto: "Analista",
@@ -836,6 +984,55 @@ function EmployeesPage({ refreshKey, refresh }) {
       setErrorMessage(err.message);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function submitDepartment(event) {
+    event.preventDefault();
+    setSavingDepartment(true);
+    setDepartmentMessage("");
+    setDepartmentError("");
+    const payload = {
+      nombre_departamento: departmentForm.nombre_departamento,
+      descripcion: departmentForm.descripcion || null,
+    };
+    try {
+      if (departmentForm.id_departamento) {
+        await api.updateDepartment(departmentForm.id_departamento, payload);
+        setDepartmentMessage("Departamento actualizado correctamente.");
+      } else {
+        await api.createDepartment(payload);
+        setDepartmentMessage("Departamento creado correctamente.");
+      }
+      setDepartmentForm({ id_departamento: null, nombre_departamento: "", descripcion: "" });
+      refresh();
+    } catch (err) {
+      setDepartmentError(err.message);
+    } finally {
+      setSavingDepartment(false);
+    }
+  }
+
+  function editDepartment(row) {
+    setDepartmentMessage("");
+    setDepartmentError("");
+    setDepartmentForm({
+      id_departamento: row.id_departamento,
+      nombre_departamento: row.nombre_departamento,
+      descripcion: row.descripcion || "",
+    });
+  }
+
+  async function removeDepartment(row) {
+    if (!window.confirm(`¿Eliminar el departamento “${row.nombre_departamento}”?`)) return;
+    setDepartmentMessage("");
+    setDepartmentError("");
+    try {
+      await api.deleteDepartment(row.id_departamento);
+      setDepartmentMessage("Departamento eliminado correctamente.");
+      refresh();
+    } catch (err) {
+      setDepartmentError(err.message);
     }
   }
 
@@ -866,12 +1063,54 @@ function EmployeesPage({ refreshKey, refresh }) {
             <Field label="Dirección"><input required value={form.direccion} onChange={(e) => setForm({ ...form, direccion: e.target.value })} /></Field>
           </FormGrid>
         </Panel>
-        <Panel title="Departamentos" subtitle="Estructura organizacional">
+        <Panel title="Departamentos" subtitle="Administración de la estructura organizacional">
+          <Notice>{departmentMessage}</Notice>
+          <Notice type="error">{departmentError}</Notice>
+          <FormGrid
+            onSubmit={submitDepartment}
+            busy={savingDepartment}
+            buttonLabel={departmentForm.id_departamento ? "Actualizar departamento" : "Crear departamento"}
+          >
+            <Field label="Nombre">
+              <input
+                required
+                minLength="2"
+                value={departmentForm.nombre_departamento}
+                onChange={(event) => setDepartmentForm({
+                  ...departmentForm,
+                  nombre_departamento: event.target.value,
+                })}
+              />
+            </Field>
+            <Field label="Descripción">
+              <input
+                value={departmentForm.descripcion}
+                onChange={(event) => setDepartmentForm({
+                  ...departmentForm,
+                  descripcion: event.target.value,
+                })}
+              />
+            </Field>
+          </FormGrid>
           <DataTable
             columns={[
               { key: "nombre_departamento", label: "Departamento" },
               { key: "colaboradores", label: "Colaboradores" },
               { key: "descripcion", label: "Descripción" },
+              {
+                key: "acciones",
+                label: "Acciones",
+                render: (_value, row) => (
+                  <div className="table-actions">
+                    <button type="button" className="compact-button" onClick={() => editDepartment(row)}>
+                      Editar
+                    </button>
+                    <button type="button" className="compact-button danger" onClick={() => removeDepartment(row)}>
+                      Eliminar
+                    </button>
+                  </div>
+                ),
+              },
             ]}
             rows={departments.data || []}
           />
@@ -879,7 +1118,7 @@ function EmployeesPage({ refreshKey, refresh }) {
       </section>
       <Panel title="Plantilla de colaboradores" subtitle={<LastUpdated label={`${employees.data?.length || 0} registros visibles`} />}>
         <div className="toolbar">
-          <SearchBar value={query} onChange={setQuery} placeholder="Buscar por nombre, codigo o cedula" />
+          <SearchBar value={query} onChange={setQuery} placeholder="Buscar por nombre, código o cédula" />
           <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="todos">Todos</option>
             <option value="activo">Activos</option>
@@ -892,7 +1131,7 @@ function EmployeesPage({ refreshKey, refresh }) {
         </div>
         <DataTable
           columns={[
-            { key: "codigo_empresa", label: "Codigo" },
+            { key: "codigo_empresa", label: "Código" },
             { key: "nombre_completo", label: "Nombre" },
             { key: "departamento", label: "Departamento" },
             { key: "puesto", label: "Puesto" },
@@ -912,7 +1151,7 @@ function DailyPage({ refreshKey, refresh }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [attendance, setAttendance] = useState({ codigo_empresa: "", fecha: today, presente: true });
-  const [absence, setAbsence] = useState({ codigo_empresa: "", fecha: today, motivo: "Cita medica" });
+  const [absence, setAbsence] = useState({ codigo_empresa: "", fecha: today, motivo: "Cita médica" });
   const [vacation, setVacation] = useState({ codigo_empresa: "", fecha_inicio: today, fecha_fin: today, observaciones: "Vacaciones aprobadas" });
 
   useEffect(() => {
@@ -982,7 +1221,7 @@ function DailyPage({ refreshKey, refresh }) {
           </FormGrid>
         </Panel>
       </section>
-      <Panel title="Registros recientes" subtitle="Últimos movimientos de control diario">
+      <Panel title="Registros recientes" subtitle="Ultimos movimientos de control diario">
         <DataTable
           columns={[
             { key: "codigo_empresa", label: "Código" },
@@ -1047,8 +1286,8 @@ function DevelopmentPage({ refreshKey, refresh }) {
           </div>
           <div className="score-card">
             <span>Desempeño neto actual</span>
-            <strong>{latestEvaluation ? `${latestEvaluation.pct_neto}%` : "Sin evaluacion"}</strong>
-            <small>{latestEvaluation ? `Última evaluacion: ${latestEvaluation.fecha_evaluacion}` : "Registra una evaluacion para ver el resultado."}</small>
+            <strong>{latestEvaluation ? `${latestEvaluation.pct_neto}%` : "Sin evaluación"}</strong>
+            <small>{latestEvaluation ? `Última evaluación: ${latestEvaluation.fecha_evaluacion}` : "Registra una evaluación para ver el resultado."}</small>
           </div>
           <DataTable
             columns={[
@@ -1060,7 +1299,7 @@ function DevelopmentPage({ refreshKey, refresh }) {
           />
         </Panel>
         <Panel title="Nueva capacitación">
-          <FormGrid onSubmit={(e) => submit(e, api.recordTraining, training, "Capacitacion")} buttonLabel="Guardar capacitación">
+          <FormGrid onSubmit={(e) => submit(e, api.recordTraining, training, "Capacitación")} buttonLabel="Guardar capacitación">
             <EmployeeSelect value={training.codigo_empresa} options={options.data} onChange={(value) => setTraining({ ...training, codigo_empresa: value })} />
             <Field label="Capacitación"><input value={training.nombre_capacitacion} onChange={(e) => setTraining({ ...training, nombre_capacitacion: e.target.value })} /></Field>
             <Field label="Inicio"><input type="date" value={training.fecha_inicio} onChange={(e) => setTraining({ ...training, fecha_inicio: e.target.value })} /></Field>
@@ -1069,7 +1308,7 @@ function DevelopmentPage({ refreshKey, refresh }) {
         </Panel>
       </section>
       <Panel title="Registrar evaluación de desempeño">
-        <FormGrid onSubmit={(e) => submit(e, api.recordEvaluation, { ...evaluation, pct_bruto: Number(evaluation.pct_bruto) }, "Evaluacion")} buttonLabel="Guardar evaluación">
+        <FormGrid onSubmit={(e) => submit(e, api.recordEvaluation, { ...evaluation, pct_bruto: Number(evaluation.pct_bruto) }, "Evaluación")} buttonLabel="Guardar evaluación">
           <EmployeeSelect value={evaluation.codigo_empresa} options={options.data} onChange={(value) => setEvaluation({ ...evaluation, codigo_empresa: value })} />
           <Field label="Fecha"><input type="date" value={evaluation.fecha_evaluacion} onChange={(e) => setEvaluation({ ...evaluation, fecha_evaluacion: e.target.value })} /></Field>
           <Field label="Puntuación bruta"><input type="number" min="0" max="100" value={evaluation.pct_bruto} onChange={(e) => setEvaluation({ ...evaluation, pct_bruto: e.target.value })} /></Field>
@@ -1199,13 +1438,14 @@ function ReportsPage({ refreshKey, refresh }) {
     ...item,
     color: colorForDepartment(item.name, index),
   }));
+  const departmentTotal = departmentData.reduce((total, item) => total + item.value, 0);
 
   return (
     <>
       <PageHeader
         eyebrow="Módulo 6"
         title="Reportes gerenciales"
-        description="Panel consolidado para analizar plantilla, rotación, asistencia y desempeno."
+        description="Panel consolidado para analizar plantilla, rotación, asistencia y desempeño."
         actions={<button className="ghost-button" onClick={refresh}><RefreshCw size={16} />Actualizar</button>}
       />
       <section className="metric-grid four">
@@ -1217,24 +1457,46 @@ function ReportsPage({ refreshKey, refresh }) {
       <section className="dashboard-grid">
         <Panel title="Salidas por mes">
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data.monthly_exits}>
+            <BarChart data={data.monthly_exits} margin={{ top: 28, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="mes" />
-              <YAxis />
-              <Tooltip {...chartTooltipProps} />
-              <Bar dataKey="salidas" fill="#0f766e" radius={[8, 8, 0, 0]} />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} />
+              <Tooltip
+                {...chartTooltipProps}
+                formatter={(value) => [formatInteger(value), "Salidas"]}
+              />
+              <Bar dataKey="salidas" fill="#0f766e" radius={[8, 8, 0, 0]} maxBarSize={48}>
+                <LabelList
+                  dataKey="salidas"
+                  position="top"
+                  formatter={formatInteger}
+                  className="chart-value-label"
+                />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </Panel>
         <Panel title="Plantilla por departamento">
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={departmentData} layout="vertical" margin={{ left: 35 }}>
+            <BarChart data={departmentData} layout="vertical" margin={{ left: 35, right: 58 }}>
               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-              <XAxis type="number" />
+              <XAxis type="number" allowDecimals={false} axisLine={false} tickLine={false} />
               <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 11 }} />
-              <Tooltip {...chartTooltipProps} />
+              <Tooltip
+                {...chartTooltipProps}
+                formatter={(value) => [
+                  `${formatInteger(value)} · ${formatPercentage((value / departmentTotal) * 100)}`,
+                  "Colaboradores",
+                ]}
+              />
               <Bar dataKey="value" radius={[0, 8, 8, 0]}>
                 {departmentData.map((item) => <Cell key={item.name} fill={item.color} />)}
+                <LabelList
+                  dataKey="value"
+                  position="right"
+                  formatter={formatInteger}
+                  className="chart-value-label"
+                />
               </Bar>
             </BarChart>
           </ResponsiveContainer>
@@ -1244,14 +1506,18 @@ function ReportsPage({ refreshKey, refresh }) {
   );
 }
 
-function DepartmentLegend({ items }) {
+function DepartmentLegend({ items, total }) {
   return (
     <div className="department-legend">
       {items.map((item) => (
-        <span key={item.name}>
-          <i style={{ background: item.color }} />
-          {item.name}
-        </span>
+        <div className="department-legend-item" key={item.name} title={item.name}>
+          <span>
+            <i style={{ background: item.color }} />
+            {item.name}
+          </span>
+          <strong>{formatInteger(item.value)}</strong>
+          <small>{formatPercentage((item.value / total) * 100)}</small>
+        </div>
       ))}
     </div>
   );
@@ -1285,7 +1551,7 @@ function ErrorScreen({ error }) {
   return (
     <div className="screen-state error-state">
       <PieChartIcon size={30} />
-      <strong>No se pudo cargar la informacion</strong>
+      <strong>No se pudo cargar la información</strong>
       <span>{error}</span>
     </div>
   );

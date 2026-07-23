@@ -1,17 +1,31 @@
+from contextlib import asynccontextmanager
 import os
+import secrets
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from . import models, repository, schemas
 from .database import Base, SessionLocal, engine, get_db
 from .seed import reset_demo_data, seed_demo_data
 
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    with SessionLocal() as db:
+        seed_demo_data(db, employee_count=300)
+    yield
+
+
 app = FastAPI(
-    title="Sistema de Gestion de Recursos Humanos",
+    title="Sistema de Gestión de Recursos Humanos",
     description="Backend del proyecto semestral de Gerencia de Recursos Humanos.",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 origins = [
@@ -29,11 +43,17 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-def on_startup() -> None:
-    Base.metadata.create_all(bind=engine)
-    with SessionLocal() as db:
-        seed_demo_data(db, employee_count=300)
+@app.exception_handler(ValueError)
+async def value_error_handler(_request: Request, exc: ValueError):
+    return JSONResponse(status_code=400, content={"detail": str(exc)})
+
+
+@app.exception_handler(IntegrityError)
+async def integrity_error_handler(_request: Request, _exc: IntegrityError):
+    return JSONResponse(
+        status_code=409,
+        content={"detail": "El registro está duplicado o hace referencia a datos no válidos."},
+    )
 
 
 @app.get("/api/health")
@@ -42,8 +62,19 @@ def health() -> dict[str, str]:
 
 
 @app.post("/api/seed")
-def seed(reset: bool = False, employees: int = Query(default=300, ge=300, le=1000), db: Session = Depends(get_db)):
+def seed(
+    reset: bool = False,
+    employees: int = Query(default=300, ge=300, le=1000),
+    reset_key: str | None = Header(default=None, alias="X-Demo-Reset-Key"),
+    db: Session = Depends(get_db),
+):
     if reset:
+        expected_key = os.getenv("DEMO_RESET_KEY")
+        if not expected_key or not reset_key or not secrets.compare_digest(reset_key, expected_key):
+            raise HTTPException(
+                status_code=403,
+                detail="La regeneración de datos requiere la clave de demostración.",
+            )
         reset_demo_data(db, employee_count=employees)
     else:
         seed_demo_data(db, employee_count=employees)
@@ -63,6 +94,20 @@ def get_departments(db: Session = Depends(get_db)):
 @app.post("/api/departments")
 def post_department(payload: schemas.DepartmentCreate, db: Session = Depends(get_db)):
     return repository.create_department(db, payload)
+
+
+@app.put("/api/departments/{department_id}")
+def put_department(
+    department_id: int,
+    payload: schemas.DepartmentCreate,
+    db: Session = Depends(get_db),
+):
+    return repository.update_department(db, department_id, payload)
+
+
+@app.delete("/api/departments/{department_id}")
+def delete_department(department_id: int, db: Session = Depends(get_db)):
+    return repository.delete_department(db, department_id)
 
 
 @app.get("/api/employees")
@@ -97,10 +142,7 @@ def get_evaluations(
 
 @app.post("/api/employees")
 def post_employee(payload: schemas.EmployeeCreate, db: Session = Depends(get_db)):
-    try:
-        return repository.create_employee(db, payload)
-    except Exception as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return repository.create_employee(db, payload)
 
 
 @app.get("/api/records/recent")
@@ -135,20 +177,23 @@ def post_evaluation(payload: schemas.EvaluationCreate, db: Session = Depends(get
 
 @app.post("/api/movements")
 def post_movement(payload: schemas.MovementCreate, db: Session = Depends(get_db)):
-    try:
-        return repository.record_movement(db, payload)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return repository.record_movement(db, payload)
 
 
 @app.post("/api/terminations")
 def post_termination(payload: schemas.TerminationCreate, db: Session = Depends(get_db)):
-    try:
-        return repository.record_termination(db, payload)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return repository.record_termination(db, payload)
 
 
 @app.get("/api/recruitment")
 def get_recruitment():
     return repository.recruitment_report()
+
+
+@app.post("/api/recruitment/analyze")
+async def post_recruitment_analysis(
+    file: UploadFile = File(...),
+    keywords: str | None = Form(default=None),
+):
+    content = await file.read()
+    return repository.analyze_cv(file.filename or "hoja_de_vida.txt", content, keywords)

@@ -1,11 +1,14 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
 
 async function request(path, options = {}) {
+  const isFormData = options.body instanceof FormData;
   const response = await fetch(`${API_URL}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
+    headers: isFormData
+      ? { ...(options.headers || {}) }
+      : {
+          "Content-Type": "application/json",
+          ...(options.headers || {}),
+        },
     ...options,
   });
 
@@ -27,6 +30,8 @@ export const api = {
   getDashboard: () => request("/dashboard"),
   getDepartments: () => request("/departments"),
   createDepartment: (payload) => request("/departments", { method: "POST", body: JSON.stringify(payload) }),
+  updateDepartment: (id, payload) => request(`/departments/${id}`, { method: "PUT", body: JSON.stringify(payload) }),
+  deleteDepartment: (id) => request(`/departments/${id}`, { method: "DELETE" }),
   getEmployees: (params = {}) => {
     const search = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
@@ -53,5 +58,14 @@ export const api = {
   recordMovement: (payload) => request("/movements", { method: "POST", body: JSON.stringify(payload) }),
   recordTermination: (payload) => request("/terminations", { method: "POST", body: JSON.stringify(payload) }),
   getRecruitment: () => request("/recruitment"),
-  seed: (reset = false) => request(`/seed?reset=${reset}&employees=300`, { method: "POST" }),
+  analyzeCv: (file, keywords = "") => {
+    const body = new FormData();
+    body.append("file", file);
+    if (keywords.trim()) body.append("keywords", keywords);
+    return request("/recruitment/analyze", { method: "POST", body });
+  },
+  seed: (reset = false, resetKey = "") => request(`/seed?reset=${reset}&employees=300`, {
+    method: "POST",
+    headers: resetKey ? { "X-Demo-Reset-Key": resetKey } : {},
+  }),
 };

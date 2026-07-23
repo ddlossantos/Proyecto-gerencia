@@ -19,50 +19,50 @@ LAST_NAMES = [
 ]
 
 DEPARTMENTS = [
-    ("Recursos Humanos", "Gestion de talento, bienestar y procesos laborales"),
+    ("Recursos Humanos", "Gestión de talento, bienestar y procesos laborales"),
     ("Finanzas", "Presupuesto, contabilidad, pagos y control financiero"),
-    ("Tecnologia", "Infraestructura, desarrollo y soporte tecnico"),
-    ("Operaciones", "Ejecucion operativa y mejora continua"),
-    ("Ventas", "Gestion comercial y relacion con clientes"),
-    ("Marketing", "Comunicacion, marca y campanas"),
-    ("Logistica", "Distribucion, inventario y coordinacion"),
-    ("Legal", "Contratos, cumplimiento y asesoria legal"),
-    ("Servicio al Cliente", "Atencion, casos y satisfaccion del cliente"),
-    ("Compras", "Proveedores, negociacion y abastecimiento"),
-    ("Calidad", "Auditorias, control de procesos y mejora"),
-    ("Direccion General", "Planificacion estrategica y toma de decisiones"),
+    ("Tecnología", "Infraestructura, desarrollo y soporte técnico"),
+    ("Operaciones", "Ejecución operativa y mejora continua"),
+    ("Ventas", "Gestión comercial y relación con clientes"),
+    ("Marketing", "Comunicación, marca y campañas"),
+    ("Logística", "Distribución, inventario y coordinación"),
+    ("Legal", "Contratos, cumplimiento y asesoría legal"),
+    ("Servicio al Cliente", "Atención, casos y satisfacción del cliente"),
+    ("Compras", "Proveedores, negociación y abastecimiento"),
+    ("Calidad", "Auditorías, control de procesos y mejora"),
+    ("Dirección General", "Planificación estratégica y toma de decisiones"),
 ]
 
 POSITIONS = {
-    "Recursos Humanos": ["Analista de RRHH", "Coordinador de Talento", "Especialista de Nomina"],
-    "Finanzas": ["Analista Financiero", "Contador", "Asistente de Tesoreria"],
-    "Tecnologia": ["Desarrollador", "Soporte Tecnico", "Administrador de Sistemas"],
+    "Recursos Humanos": ["Analista de RR. HH.", "Coordinador de Talento", "Especialista de Nómina"],
+    "Finanzas": ["Analista Financiero", "Contador", "Asistente de Tesorería"],
+    "Tecnología": ["Desarrollador", "Soporte Técnico", "Administrador de Sistemas"],
     "Operaciones": ["Supervisor Operativo", "Analista de Procesos", "Coordinador Operativo"],
     "Ventas": ["Ejecutivo de Ventas", "Supervisor Comercial", "Asesor Comercial"],
-    "Marketing": ["Analista de Marketing", "Community Manager", "Disenador Grafico"],
-    "Logistica": ["Coordinador Logistico", "Analista de Inventario", "Supervisor de Bodega"],
+    "Marketing": ["Analista de Marketing", "Community Manager", "Diseñador Gráfico"],
+    "Logística": ["Coordinador Logístico", "Analista de Inventario", "Supervisor de Bodega"],
     "Legal": ["Asistente Legal", "Analista de Cumplimiento", "Abogado Corporativo"],
-    "Servicio al Cliente": ["Agente de Servicio", "Supervisor de Atencion", "Analista de Experiencia"],
+    "Servicio al Cliente": ["Agente de Servicio", "Supervisor de Atención", "Analista de Experiencia"],
     "Compras": ["Analista de Compras", "Coordinador de Proveedores", "Asistente de Compras"],
     "Calidad": ["Auditor de Calidad", "Analista de Calidad", "Inspector de Procesos"],
-    "Direccion General": ["Asistente Ejecutivo", "Analista Estrategico", "Coordinador Administrativo"],
+    "Dirección General": ["Asistente Ejecutivo", "Analista Estratégico", "Coordinador Administrativo"],
 }
 
 TRAININGS = [
-    "Induccion corporativa", "Excel para analisis", "Liderazgo efectivo",
-    "Atencion al cliente", "Ciberseguridad basica", "Gestion de conflictos",
-    "Seguridad ocupacional", "Power BI inicial", "Comunicacion asertiva",
+    "Inducción corporativa", "Excel para análisis", "Liderazgo efectivo",
+    "Atención al cliente", "Ciberseguridad básica", "Gestión de conflictos",
+    "Seguridad ocupacional", "Power BI inicial", "Comunicación asertiva",
     "Normas internas de cumplimiento",
 ]
 
 ABSENCE_REASONS = [
-    "Cita medica", "Incapacidad", "Tramite personal", "Emergencia familiar",
+    "Cita médica", "Incapacidad", "Trámite personal", "Emergencia familiar",
     "Permiso autorizado", "Duelo", "Ausencia justificada",
 ]
 
 EXIT_REASONS = [
-    "Renuncia voluntaria", "Finalizacion de contrato", "Bajo desempeno",
-    "Reestructuracion", "Mejor oportunidad laboral",
+    "Renuncia voluntaria", "Finalización de contrato", "Bajo desempeño",
+    "Reestructuración", "Mejor oportunidad laboral",
 ]
 
 
@@ -123,7 +123,7 @@ def seed_demo_data(db: Session, employee_count: int = 300, force: bool = False) 
             apellido=f"{last} {second_last}",
             fecha_nacimiento=birth,
             nacionalidad=random.choice(["Panameña", "Colombiana", "Costarricense", "Dominicana", "Venezolana"]),
-            direccion=f"Calle {random.randint(1, 80)}, Ciudad de Panama",
+            direccion=f"Calle {random.randint(1, 80)}, Ciudad de Panamá",
             telefono_principal=f"6{random.randint(100, 999)}-{random.randint(1000, 9999)}",
             telefono_secundario=f"2{random.randint(100, 999)}-{random.randint(1000, 9999)}" if random.random() < 0.35 else None,
             estado="activo",
@@ -136,7 +136,7 @@ def seed_demo_data(db: Session, employee_count: int = 300, force: bool = False) 
                 fecha_ingreso=hire,
                 puesto=puesto,
                 observaciones=random.choice([
-                    "Ingreso completado con documentacion validada.",
+                    "Ingreso completado con documentación validada.",
                     "Colaborador asignado a plan de seguimiento.",
                     "Perfil operativo estable.",
                     "Potencial de crecimiento interno.",

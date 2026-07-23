@@ -1,8 +1,11 @@
-from datetime import date
+from io import BytesIO
 from pathlib import Path
+import re
 from typing import Any
+import unicodedata
 
 import pandas as pd
+from pypdf import PdfReader
 from sqlalchemy import case, desc, func, or_
 from sqlalchemy.orm import Session, joinedload
 
@@ -13,6 +16,26 @@ def _employee_name(employee: models.Employee | None) -> str:
     if not employee:
         return ""
     return f"{employee.nombre} {employee.apellido}"
+
+
+def _require_employee(db: Session, code: str, *, active: bool = False) -> models.Employee:
+    employee = db.query(models.Employee).filter(models.Employee.codigo_empresa == code).first()
+    if not employee:
+        raise ValueError("El colaborador indicado no existe.")
+    if active and employee.estado != "activo":
+        raise ValueError("El colaborador indicado no está activo.")
+    return employee
+
+
+def _require_department(db: Session, department_id: int) -> models.Department:
+    department = (
+        db.query(models.Department)
+        .filter(models.Department.id_departamento == department_id)
+        .first()
+    )
+    if not department:
+        raise ValueError("El departamento indicado no existe.")
+    return department
 
 
 def next_employee_code(db: Session) -> str:
@@ -58,6 +81,45 @@ def create_department(db: Session, payload: schemas.DepartmentCreate) -> dict[st
         "descripcion": dep.descripcion,
         "colaboradores": 0,
     }
+
+
+def update_department(
+    db: Session,
+    department_id: int,
+    payload: schemas.DepartmentCreate,
+) -> dict[str, Any]:
+    department = _require_department(db, department_id)
+    department.nombre_departamento = payload.nombre_departamento
+    department.descripcion = payload.descripcion
+    db.commit()
+    db.refresh(department)
+    collaborators = (
+        db.query(models.Personnel)
+        .filter(models.Personnel.id_departamento == department_id)
+        .count()
+    )
+    return {
+        "id_departamento": department.id_departamento,
+        "nombre_departamento": department.nombre_departamento,
+        "descripcion": department.descripcion,
+        "colaboradores": collaborators,
+    }
+
+
+def delete_department(db: Session, department_id: int) -> dict[str, str]:
+    department = _require_department(db, department_id)
+    collaborators = (
+        db.query(models.Personnel)
+        .filter(models.Personnel.id_departamento == department_id)
+        .count()
+    )
+    if collaborators:
+        raise ValueError(
+            "No se puede eliminar un departamento que tiene colaboradores asignados."
+        )
+    db.delete(department)
+    db.commit()
+    return {"status": "ok"}
 
 
 def list_employees(
@@ -119,6 +181,7 @@ def employee_to_dict(employee: models.Employee) -> dict[str, Any]:
 
 
 def create_employee(db: Session, payload: schemas.EmployeeCreate) -> dict[str, Any]:
+    _require_department(db, payload.id_departamento)
     code = next_employee_code(db)
     employee_data = payload.model_dump(
         exclude={"fecha_ingreso", "puesto", "id_departamento", "observaciones"}
@@ -167,16 +230,16 @@ def list_vacancies() -> list[dict[str, Any]]:
             "cantidad": 2,
             "estado": "Abierta",
             "prioridad": "Alta",
-            "descripcion": "Perfil orientado a reportes, KPIs, depuracion de datos y soporte al dashboard gerencial.",
+            "descripcion": "Perfil orientado a reportes, KPI, depuración de datos y soporte al dashboard gerencial.",
         },
         {
             "id": 2,
-            "puesto": "Soporte Tecnico",
-            "departamento": "Tecnologia",
+            "puesto": "Soporte Técnico",
+            "departamento": "Tecnología",
             "cantidad": 3,
             "estado": "Abierta",
             "prioridad": "Media",
-            "descripcion": "Atencion de incidencias, mantenimiento preventivo y soporte a usuarios internos.",
+            "descripcion": "Atención de incidencias, mantenimiento preventivo y soporte a usuarios internos.",
         },
         {
             "id": 3,
@@ -185,16 +248,16 @@ def list_vacancies() -> list[dict[str, Any]]:
             "cantidad": 4,
             "estado": "Abierta",
             "prioridad": "Alta",
-            "descripcion": "Gestion de cartera, prospeccion comercial y seguimiento de oportunidades.",
+            "descripcion": "Gestión de cartera, prospección comercial y seguimiento de oportunidades.",
         },
         {
             "id": 4,
             "puesto": "Auditor de Calidad",
             "departamento": "Calidad",
             "cantidad": 1,
-            "estado": "En evaluacion",
+            "estado": "En evaluación",
             "prioridad": "Media",
-            "descripcion": "Revision de procesos internos, controles y acciones de mejora continua.",
+            "descripcion": "Revisión de procesos internos, controles y acciones de mejora continua.",
         },
     ]
 
@@ -211,6 +274,7 @@ def list_evaluations(db: Session, codigo_empresa: str | None = None, limit: int 
 
 
 def record_attendance(db: Session, payload: schemas.AttendanceCreate) -> dict[str, Any]:
+    _require_employee(db, payload.codigo_empresa, active=True)
     existing = (
         db.query(models.Attendance)
         .filter(
@@ -231,6 +295,7 @@ def record_attendance(db: Session, payload: schemas.AttendanceCreate) -> dict[st
 
 
 def record_absence(db: Session, payload: schemas.AbsenceCreate) -> dict[str, Any]:
+    _require_employee(db, payload.codigo_empresa, active=True)
     attendance_payload = schemas.AttendanceCreate(
         codigo_empresa=payload.codigo_empresa,
         fecha=payload.fecha,
@@ -257,7 +322,8 @@ def record_absence(db: Session, payload: schemas.AbsenceCreate) -> dict[str, Any
 
 
 def record_vacation(db: Session, payload: schemas.VacationCreate) -> dict[str, Any]:
-    days = max((payload.fecha_fin - payload.fecha_inicio).days + 1, 1)
+    _require_employee(db, payload.codigo_empresa, active=True)
+    days = (payload.fecha_fin - payload.fecha_inicio).days + 1
     record = models.Vacation(**payload.model_dump(), dias_tomados=days)
     db.add(record)
     db.commit()
@@ -266,6 +332,7 @@ def record_vacation(db: Session, payload: schemas.VacationCreate) -> dict[str, A
 
 
 def record_training(db: Session, payload: schemas.TrainingCreate) -> dict[str, Any]:
+    _require_employee(db, payload.codigo_empresa, active=True)
     record = models.Training(**payload.model_dump())
     db.add(record)
     db.commit()
@@ -274,6 +341,7 @@ def record_training(db: Session, payload: schemas.TrainingCreate) -> dict[str, A
 
 
 def record_evaluation(db: Session, payload: schemas.EvaluationCreate) -> dict[str, Any]:
+    employee = _require_employee(db, payload.codigo_empresa, active=True)
     absence_count = (
         db.query(models.Absence)
         .filter(models.Absence.codigo_empresa == payload.codigo_empresa)
@@ -286,9 +354,7 @@ def record_evaluation(db: Session, payload: schemas.EvaluationCreate) -> dict[st
         pct_bruto=payload.pct_bruto,
         pct_neto=net,
     )
-    employee = db.query(models.Employee).filter(models.Employee.codigo_empresa == payload.codigo_empresa).first()
-    if employee:
-        employee.pct_desempeno = net
+    employee.pct_desempeno = net
     db.add(record)
     db.commit()
     db.refresh(record)
@@ -296,6 +362,7 @@ def record_evaluation(db: Session, payload: schemas.EvaluationCreate) -> dict[st
 
 
 def record_movement(db: Session, payload: schemas.MovementCreate) -> dict[str, Any]:
+    _require_department(db, payload.depto_nuevo)
     employee = (
         db.query(models.Employee)
         .options(joinedload(models.Employee.personal))
@@ -303,7 +370,9 @@ def record_movement(db: Session, payload: schemas.MovementCreate) -> dict[str, A
         .first()
     )
     if not employee or not employee.personal:
-        raise ValueError("Empleado no encontrado")
+        raise ValueError("Colaborador no encontrado.")
+    if employee.estado != "activo":
+        raise ValueError("No se puede trasladar a un colaborador que no está activo.")
     movement = models.Movement(
         codigo_empresa=payload.codigo_empresa,
         fecha_movimiento=payload.fecha_movimiento,
@@ -324,7 +393,7 @@ def record_movement(db: Session, payload: schemas.MovementCreate) -> dict[str, A
 def record_termination(db: Session, payload: schemas.TerminationCreate) -> dict[str, Any]:
     employee = db.query(models.Employee).filter(models.Employee.codigo_empresa == payload.codigo_empresa).first()
     if not employee:
-        raise ValueError("Empleado no encontrado")
+        raise ValueError("Colaborador no encontrado.")
     employee.estado = "terminado"
     existing = (
         db.query(models.Termination)
@@ -557,3 +626,92 @@ def recruitment_report() -> dict[str, Any]:
         "records": records,
         "summary": {"total": len(records), "alto": high, "medio": medium, "bajo": low},
     }
+
+
+def _normalize_text(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", value)
+    return "".join(char for char in normalized if not unicodedata.combining(char)).lower()
+
+
+def _default_keywords() -> list[str]:
+    keyword_path = (
+        Path(__file__).resolve().parents[2]
+        / "Modulo_1_Reclutamiento"
+        / "local_keywords_binder_files"
+        / "ingeniero_de_datos.keyb"
+    )
+    if not keyword_path.exists():
+        return ["recursos humanos", "análisis de datos", "Excel", "Python"]
+    return [
+        item.strip()
+        for item in keyword_path.read_text(encoding="utf-8").split(";")
+        if item.strip()
+    ]
+
+
+def analyze_cv(
+    filename: str,
+    content: bytes,
+    keywords_text: str | None = None,
+    *,
+    storage_root: Path | None = None,
+) -> dict[str, Any]:
+    safe_filename = re.sub(r"[^A-Za-z0-9._-]", "_", Path(filename).name)
+    suffix = Path(safe_filename).suffix.lower()
+    if suffix not in {".pdf", ".txt"}:
+        raise ValueError("Solo se admiten hojas de vida en formato PDF o TXT.")
+    if not content:
+        raise ValueError("El archivo está vacío.")
+    if len(content) > 5 * 1024 * 1024:
+        raise ValueError("El archivo supera el límite de 5 MB.")
+
+    if suffix == ".pdf":
+        try:
+            text = "\n".join(page.extract_text() or "" for page in PdfReader(BytesIO(content)).pages)
+        except Exception as exc:
+            raise ValueError("No se pudo leer el archivo PDF.") from exc
+    else:
+        try:
+            text = content.decode("utf-8")
+        except UnicodeDecodeError:
+            text = content.decode("latin-1")
+
+    if not text.strip():
+        raise ValueError("No se encontró texto legible en el archivo.")
+
+    keywords = (
+        [item.strip() for item in keywords_text.split(",") if item.strip()]
+        if keywords_text
+        else _default_keywords()
+    )
+    if not keywords:
+        raise ValueError("Debe indicar al menos una palabra clave.")
+
+    normalized_text = _normalize_text(text)
+    found = [keyword for keyword in keywords if _normalize_text(keyword) in normalized_text]
+    missing = [keyword for keyword in keywords if keyword not in found]
+    score = round((len(found) / len(keywords)) * 100, 2)
+    status = "high_accuracy" if score >= 70 else "low_accuracy" if score >= 40 else "descartado"
+    record = {
+        "archivo": safe_filename,
+        "coincidencias": len(found),
+        "total_keywords": len(keywords),
+        "porcentaje": score,
+        "estado": status,
+        "palabras_encontradas": ", ".join(found),
+        "palabras_faltantes": ", ".join(missing),
+    }
+
+    recruitment_root = storage_root or (
+        Path(__file__).resolve().parents[2] / "Modulo_1_Reclutamiento"
+    )
+    input_dir = recruitment_root / "cv_input_temp"
+    input_dir.mkdir(parents=True, exist_ok=True)
+    (input_dir / safe_filename).write_bytes(content)
+
+    report_path = recruitment_root / "filtered_cv" / "reporte_reclutamiento.csv"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    current = pd.read_csv(report_path) if report_path.exists() else pd.DataFrame()
+    updated = pd.concat([current, pd.DataFrame([record])], ignore_index=True)
+    updated.to_csv(report_path, index=False)
+    return record

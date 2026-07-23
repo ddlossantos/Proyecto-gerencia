@@ -4,15 +4,15 @@ Sistema digital de gestión de Recursos Humanos para centralizar procesos de rec
 
 ## Estructura
 
-- `backend/`: API en FastAPI con modelos, endpoints y datos demo de 300 colaboradores.
-- `frontend/`: app React + Vite con landing de producto, dashboard, formularios, tablas y gráficas, con inspiración visual en Play Astro y TailAdmin adaptada al proyecto.
-- `modulo_departamentos.ipynb`: módulo 0 para CRUD de departamentos.
-- `Modulo_1_Reclutamiento/`: gestión de palabras clave, carga de CVs, extracción de texto y filtrado de candidatos.
+- `backend/`: API en FastAPI con modelos, endpoints y datos de demostración de 300 colaboradores.
+- `frontend/`: aplicación React + Vite con presentación de producto, dashboard, formularios, tablas y gráficas, con inspiración visual en Play Astro y TailAdmin adaptada al proyecto.
+- `modulo_departamentos.ipynb`: módulo 0 para el CRUD de departamentos.
+- `Modulo_1_Reclutamiento/`: gestión de palabras clave, carga de CV, extracción de texto y filtrado de candidatos.
 - `Modulo_2_Personal/`: ingreso de colaboradores, datos personales y datos laborales.
 - `Modulo_3_Control_Diario/`: asistencias, ausencias y vacaciones.
 - `Modulo_4_Desarrollo/`: capacitaciones y evaluaciones de desempeño.
 - `Modulo_5_Salida/`: movimientos internos y salida definitiva de personal.
-- `Modulo_6_Reportes/`: KPIs, dashboard gerencial y exportación CSV.
+- `Modulo_6_Reportes/`: KPI, dashboard gerencial y exportación a CSV.
 - `rrhh_schema.sql`: esquema MySQL de la base de datos `rrhh_sistema`.
 - `docs/`: indicaciones del proyecto y resumen de avance.
 
@@ -22,14 +22,16 @@ La entrega principal ahora es una aplicación web con:
 
 - Frontend en React.
 - Backend en FastAPI.
-- Base local SQLite automática para demo.
+- Base local SQLite automática para la demostración.
 - Semilla automática de mínimo 300 colaboradores.
 - Soporte opcional para MySQL por `DATABASE_URL`.
-- Landing de producto con tres pestañas principales: Inicio, Solución y Dashboard.
-- Inicio une portada, introducción, organigrama y quienes somos en una experiencia de scroll.
-- Solución une propuesta de producto y manual de usuario por módulo.
+- Presentación de producto con tres pestañas principales: Inicio, Solución y Dashboard.
+- Inicio une portada, introducción, organigrama y quiénes somos en una experiencia de desplazamiento.
+- Solución une la propuesta de producto y el manual de usuario por módulo.
 - Dashboard agrupa el resumen gerencial y los módulos operativos en subpestañas.
 - Modo nocturno persistente desde la barra superior.
+- Carga y análisis de hojas de vida en PDF o TXT desde el módulo de Reclutamiento.
+- Administración de departamentos desde el módulo de Personal.
 
 ### 1. Backend
 
@@ -63,14 +65,15 @@ Abre:
 http://127.0.0.1:5173
 ```
 
-### Datos demo
+### Datos de demostración
 
 Al iniciar el backend, si la base local está vacía, se crean automáticamente 300 colaboradores con departamentos, asistencia, ausencias, vacaciones, capacitaciones, evaluaciones, movimientos y salidas.
 
-Para regenerar la data demo:
+Para regenerar los datos de demostración, define `DEMO_RESET_KEY` en `.env` y envía la misma clave en la cabecera `X-Demo-Reset-Key`:
 
 ```powershell
-Invoke-RestMethod -Method Post "http://127.0.0.1:8000/api/seed?reset=true&employees=300"
+$headers = @{ "X-Demo-Reset-Key" = "tu-clave-local" }
+Invoke-RestMethod -Method Post -Headers $headers "http://127.0.0.1:8000/api/seed?reset=true&employees=300"
 ```
 
 ## Arranque local en PowerShell
@@ -84,7 +87,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m ipykernel install --user --name proyecto-gerencia --display-name "Python (Proyecto Gerencia)"
 ```
 
-En Windows puede pasar que `py` no exista o que PowerShell bloquee `Activate.ps1`. Por eso los comandos anteriores usan `python` y la ruta directa `.\.venv\Scripts\python.exe`.
+En Windows puede ocurrir que `py` no exista o que PowerShell bloquee `Activate.ps1`. Por eso, los comandos anteriores usan `python` y la ruta directa `.\.venv\Scripts\python.exe`.
 
 También puedes usar los scripts `.cmd` incluidos:
 
@@ -121,6 +124,14 @@ Los notebooks originales siguen disponibles como respaldo y evidencia del avance
 jupyter notebook
 ```
 
+## Pruebas
+
+Las validaciones principales del backend cuentan con pruebas automatizadas:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
 ## Flujo sugerido de trabajo
 
 1. Ejecutar `rrhh_schema.sql` en MySQL.
@@ -132,6 +143,6 @@ jupyter notebook
 ```powershell
 git status
 git add .
-git commit -m "Descripcion corta del avance"
+git commit -m "Descripción corta del avance"
 git push
 ```
