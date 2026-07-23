@@ -1,39 +1,39 @@
 # Proyecto Gerencia de Recursos Humanos
 
-Sistema digital de gestion de Recursos Humanos para centralizar procesos de reclutamiento, personal, control diario, desarrollo, salida y reportes gerenciales.
+Sistema digital de gestión de Recursos Humanos para centralizar procesos de reclutamiento, personal, control diario, desarrollo, salida y reportes gerenciales.
 
 ## Estructura
 
 - `backend/`: API en FastAPI con modelos, endpoints y datos demo de 300 colaboradores.
-- `frontend/`: app React + Vite con landing de producto, dashboard, formularios, tablas y graficas, con inspiracion visual en Play Astro y TailAdmin adaptada al proyecto.
-- `modulo_departamentos.ipynb`: modulo 0 para CRUD de departamentos.
-- `Modulo_1_Reclutamiento/`: gestion de palabras clave, carga de CVs, extraccion de texto y filtrado de candidatos.
+- `frontend/`: app React + Vite con landing de producto, dashboard, formularios, tablas y gráficas, con inspiración visual en Play Astro y TailAdmin adaptada al proyecto.
+- `modulo_departamentos.ipynb`: módulo 0 para CRUD de departamentos.
+- `Modulo_1_Reclutamiento/`: gestión de palabras clave, carga de CVs, extracción de texto y filtrado de candidatos.
 - `Modulo_2_Personal/`: ingreso de colaboradores, datos personales y datos laborales.
 - `Modulo_3_Control_Diario/`: asistencias, ausencias y vacaciones.
-- `Modulo_4_Desarrollo/`: capacitaciones y evaluaciones de desempeno.
+- `Modulo_4_Desarrollo/`: capacitaciones y evaluaciones de desempeño.
 - `Modulo_5_Salida/`: movimientos internos y salida definitiva de personal.
-- `Modulo_6_Reportes/`: KPIs, dashboard gerencial y exportacion CSV.
+- `Modulo_6_Reportes/`: KPIs, dashboard gerencial y exportación CSV.
 - `rrhh_schema.sql`: esquema MySQL de la base de datos `rrhh_sistema`.
 - `docs/`: indicaciones del proyecto y resumen de avance.
 
 ## App web unificada
 
-La entrega principal ahora es una aplicacion web con:
+La entrega principal ahora es una aplicación web con:
 
 - Frontend en React.
 - Backend en FastAPI.
-- Base local SQLite automatica para demo.
-- Semilla automatica de minimo 300 colaboradores.
+- Base local SQLite automática para demo.
+- Semilla automática de mínimo 300 colaboradores.
 - Soporte opcional para MySQL por `DATABASE_URL`.
-- Landing de producto con tres pestanas principales: Inicio, Solucion y Dashboard.
-- Inicio une portada, introduccion, organigrama y quienes somos en una experiencia de scroll.
-- Solucion une propuesta de producto y manual de usuario por modulo.
-- Dashboard agrupa el resumen gerencial y los modulos operativos en subpestanas.
+- Landing de producto con tres pestañas principales: Inicio, Solución y Dashboard.
+- Inicio une portada, introducción, organigrama y quienes somos en una experiencia de scroll.
+- Solución une propuesta de producto y manual de usuario por módulo.
+- Dashboard agrupa el resumen gerencial y los módulos operativos en subpestañas.
 - Modo nocturno persistente desde la barra superior.
 
 ### 1. Backend
 
-Desde la raiz del repositorio:
+Desde la raíz del repositorio:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
@@ -65,7 +65,7 @@ http://127.0.0.1:5173
 
 ### Datos demo
 
-Al iniciar el backend, si la base local esta vacia, se crean automaticamente 300 colaboradores con departamentos, asistencia, ausencias, vacaciones, capacitaciones, evaluaciones, movimientos y salidas.
+Al iniciar el backend, si la base local está vacía, se crean automáticamente 300 colaboradores con departamentos, asistencia, ausencias, vacaciones, capacitaciones, evaluaciones, movimientos y salidas.
 
 Para regenerar la data demo:
 
@@ -75,7 +75,7 @@ Invoke-RestMethod -Method Post "http://127.0.0.1:8000/api/seed?reset=true&employ
 
 ## Arranque local en PowerShell
 
-Desde la raiz del repositorio:
+Desde la raíz del repositorio:
 
 ```powershell
 python -m venv .venv
@@ -86,13 +86,13 @@ python -m venv .venv
 
 En Windows puede pasar que `py` no exista o que PowerShell bloquee `Activate.ps1`. Por eso los comandos anteriores usan `python` y la ruta directa `.\.venv\Scripts\python.exe`.
 
-Tambien puedes usar los scripts `.cmd` incluidos:
+También puedes usar los scripts `.cmd` incluidos:
 
 ```powershell
 .\scripts\setup_windows.cmd
 ```
 
-Configura la conexion a MySQL:
+Configura la conexión a MySQL:
 
 ```powershell
 Copy-Item .env.example .env
@@ -113,7 +113,7 @@ Inicializa la base de datos:
 mysql -h localhost -P 1989 -u root -p < rrhh_schema.sql
 ```
 
-Si PowerShell indica que `mysql` no se reconoce, instala MySQL Server/Client o agrega la carpeta `bin` de MySQL al `PATH` de Windows. Una ruta comun es `C:\Program Files\MySQL\MySQL Server 8.0\bin`.
+Si PowerShell indica que `mysql` no se reconoce, instala MySQL Server/Client o agrega la carpeta `bin` de MySQL al `PATH` de Windows. Una ruta común es `C:\Program Files\MySQL\MySQL Server 8.0\bin`.
 
 Los notebooks originales siguen disponibles como respaldo y evidencia del avance previo:
 

@@ -91,7 +91,7 @@ const fallbackColors = [
 
 const mainTabs = [
   { id: "home", label: "Inicio", icon: Home },
-  { id: "solution", label: "Solucion", icon: Handshake },
+  { id: "solution", label: "Solución", icon: Handshake },
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
@@ -108,12 +108,12 @@ const moduleTabs = [
 const productModules = [
   {
     title: "Reclutamiento",
-    text: "Vacantes abiertas, recepcion de CVs, filtro por palabras clave y reporte de candidatos.",
+    text: "Vacantes abiertas, recepción de CVs, filtro por palabras clave y reporte de candidatos.",
     icon: FileSearch,
   },
   {
     title: "Personal",
-    text: "Expediente unico del colaborador con ingreso, puesto, departamento, estado y desempeno.",
+    text: "Expediente único del colaborador con ingreso, puesto, departamento, estado y desempeño.",
     icon: UsersRound,
   },
   {
@@ -133,7 +133,7 @@ const productModules = [
   },
   {
     title: "Reportes",
-    text: "Indicadores para gerencia sobre plantilla, asistencia, rotacion, desempeno y departamentos.",
+    text: "Indicadores para gerencia sobre plantilla, asistencia, rotación, desempeño y departamentos.",
     icon: BarChart3,
   },
 ];
@@ -256,11 +256,11 @@ function App() {
 
 function HomePage({ setActivePage }) {
   const roles = [
-    ["Direccion del proyecto", "Coordina alcance, avances, integracion y defensa del producto."],
-    ["Analisis de RRHH", "Define procesos, reglas de negocio e indicadores por modulo."],
-    ["Diseno y experiencia", "Convierte el sistema en una presentacion clara, vendible y usable."],
+    ["Dirección del proyecto", "Coordina alcance, avances, integracion y defensa del producto."],
+    ["Análisis de RRHH", "Define procesos, reglas de negocio e indicadores por módulo."],
+    ["Diseño y experiencia", "Convierte el sistema en una presentación clara, vendible y usable."],
     ["Datos y backend", "Organiza la API, la base demo y los reportes para gerencia."],
-    ["Presentacion comercial", "Explica el valor de Talento 360 frente a la necesidad del cliente."],
+    ["Presentación comercial", "Explica el valor de Talento 360 frente a la necesidad del cliente."],
   ];
 
   return (
@@ -277,7 +277,7 @@ function HomePage({ setActivePage }) {
           <div className="hero-actions">
             <button className="primary-button standalone" onClick={() => setActivePage("solution")}>
               <Handshake size={17} />
-              Ver solucion
+              Ver solución
               <ArrowRight size={16} />
             </button>
             <button className="ghost-button" onClick={() => setActivePage("dashboard")}>
@@ -286,9 +286,9 @@ function HomePage({ setActivePage }) {
             </button>
           </div>
           <div className="hero-proof">
-            <span><CheckCircle2 size={16} /> 6 modulos conectados</span>
+            <span><CheckCircle2 size={16} /> 6 módulos conectados</span>
             <span><CheckCircle2 size={16} /> Data demo con 300 colaboradores</span>
-            <span><CheckCircle2 size={16} /> API FastAPI en ejecucion</span>
+            <span><CheckCircle2 size={16} /> API FastAPI en ejecución</span>
           </div>
         </div>
         <div className="product-visual" aria-label="Vista conceptual del software">
@@ -299,7 +299,7 @@ function HomePage({ setActivePage }) {
           <div className="visual-kpis">
             <div><strong>300</strong><span>Colaboradores</span></div>
             <div><strong>94.6%</strong><span>Asistencia</span></div>
-            <div><strong>79.1%</strong><span>Desempeno</span></div>
+            <div><strong>79.1%</strong><span>Desempeño</span></div>
           </div>
           <div className="visual-dashboard">
             <div className="visual-chart">
@@ -322,20 +322,20 @@ function HomePage({ setActivePage }) {
         </div>
       </section>
       <section className="logo-strip" aria-label="Beneficios clave">
-        {["Centralizacion", "Automatizacion", "Indicadores", "Trazabilidad"].map((item) => (
+        {["Centralización", "Automatización", "Indicadores", "Trazabilidad"].map((item) => (
           <span key={item}>{item}</span>
         ))}
       </section>
       <section className="story-section">
         <div>
-          <span className="eyebrow">Introduccion</span>
-          <h2>De registros dispersos a una solucion integral</h2>
+          <span className="eyebrow">Introducción</span>
+          <h2>De registros dispersos a una solución integral</h2>
         </div>
         <p>
           El proyecto parte de procesos tradicionales de Recursos Humanos que suelen vivir en
           hojas, correos y archivos separados. Talento 360 une esos procesos en un producto
           demostrable, con datos de ejemplo y una interfaz pensada para explicar valor, no solo
-          para capturar informacion.
+          para capturar información.
         </p>
       </section>
       <section className="feature-section">
@@ -343,15 +343,15 @@ function HomePage({ setActivePage }) {
           <span className="eyebrow">Valor del producto</span>
           <h2>Una propuesta lista para presentarse como software</h2>
           <p>
-            La interfaz deja de sentirse como una entrega tecnica aislada y se presenta como
-            una solucion que un area de Recursos Humanos podria evaluar, comprar y usar.
+            La interfaz deja de sentirse como una entrega técnica aislada y se presenta como
+            una solución que un área de Recursos Humanos podría evaluar, comprar y usar.
           </p>
         </div>
         <div className="feature-grid">
           {[
             ["Menos datos dispersos", "Une colaboradores, asistencia, desarrollo y reportes en un flujo claro.", Database],
-            ["Gestion por modulo", "Cada pantalla explica su proposito y ofrece acciones concretas para operar.", Layers3],
-            ["Lectura gerencial", "El dashboard resume plantilla, departamentos, rotacion y desempeno.", MonitorCheck],
+            ["Gestión por módulo", "Cada pantalla explica su propósito y ofrece acciones concretas para operar.", Layers3],
+            ["Lectura gerencial", "El dashboard resume plantilla, departamentos, rotación y desempeño.", MonitorCheck],
           ].map(([title, text, Icon]) => (
             <article className="feature-card" key={title}>
               <div className="feature-icon"><Icon size={22} /></div>
@@ -379,14 +379,14 @@ function HomePage({ setActivePage }) {
       <section className="process-section">
         <div className="section-heading">
           <span className="eyebrow">Recorrido comercial</span>
-          <h2>Como se vende la solucion</h2>
+          <h2>Como se vende la solución</h2>
         </div>
         <div className="process-grid">
           {[
             ["01", "Problema", "Procesos manuales, registros duplicados y poca visibilidad para gerencia."],
             ["02", "Producto", "Talento 360 centraliza el ciclo de vida del colaborador."],
-            ["03", "Evidencia", "La demo muestra datos, formularios, graficas y modulos funcionando."],
-            ["04", "Decision", "Gerencia puede ver beneficios operativos y KPIs desde el dashboard."],
+            ["03", "Evidencia", "La demo muestra datos, formularios, gráficas y módulos funcionando."],
+            ["04", "Decisión", "Gerencia puede ver beneficios operativos y KPIs desde el dashboard."],
           ].map(([number, title, text]) => (
             <article className="process-card" key={number}>
               <span>{number}</span>
@@ -398,7 +398,7 @@ function HomePage({ setActivePage }) {
       </section>
       <section className="roles-section">
         <div className="section-heading">
-          <span className="eyebrow">Quienes somos</span>
+          <span className="eyebrow">Quiénes somos</span>
           <h2>Funciones de integrantes</h2>
           <p>Estos cargos son de ejemplo y quedan listos para reemplazar por nombres reales.</p>
         </div>
@@ -416,7 +416,7 @@ function HomePage({ setActivePage }) {
           <span className="eyebrow">Demo ejecutable</span>
           <h2>Del discurso al sistema funcionando</h2>
           <p>
-            Abre el dashboard para mostrar los modulos operativos, filtros, vacantes,
+            Abre el dashboard para mostrar los módulos operativos, filtros, vacantes,
             evaluaciones por usuario y reportes conectados al backend.
           </p>
         </div>
@@ -431,21 +431,21 @@ function HomePage({ setActivePage }) {
 
 function SolutionPage({ setActivePage }) {
   const faqs = [
-    ["Que tipo de asistencia utiliza?", "La demo usa marcado web por formulario: colaborador, fecha y estado. En produccion puede ampliarse a QR, biometria o geolocalizacion."],
-    ["Los datos son reales?", "Son datos demo generados para presentar el sistema con volumen suficiente sin exponer informacion sensible."],
-    ["Que vende Talento 360?", "Vende orden, trazabilidad y reportes ejecutivos para mejorar la gestion de Recursos Humanos."],
-    ["El dashboard es general o por usuario?", "Incluye KPIs generales y evaluacion individual por colaborador en el modulo de Desarrollo."],
+    ["¿Qué tipo de asistencia utiliza?", "La demo usa marcado web por formulario: colaborador, fecha y estado. En producción puede ampliarse a QR, biometría o geolocalización."],
+    ["¿Los datos son reales?", "Son datos demo generados para presentar el sistema con volumen suficiente sin exponer información sensible."],
+    ["¿Qué vende Talento 360?", "Vende orden, trazabilidad y reportes ejecutivos para mejorar la gestión de Recursos Humanos."],
+    ["¿El dashboard es general o por usuario?", "Incluye KPIs generales y evaluación individual por colaborador en el módulo de Desarrollo."],
   ];
 
   return (
     <>
       <section className="solution-hero">
         <div>
-          <span className="eyebrow">Producto / solucion</span>
+          <span className="eyebrow">Producto / solución</span>
           <h1>Un sistema modular para gestionar talento humano</h1>
           <p>
-            Talento 360 combina manual de uso, propuesta comercial y modulos operativos
-            para que la defensa se sienta como la presentacion de un producto real.
+            Talento 360 combina manual de uso, propuesta comercial y módulos operativos
+            para que la defensa se sienta como la presentación de un producto real.
           </p>
           <div className="hero-actions">
             <button className="primary-button standalone" onClick={() => setActivePage("dashboard")}>
@@ -459,7 +459,7 @@ function SolutionPage({ setActivePage }) {
           </div>
         </div>
         <div className="solution-summary">
-          <div><strong>6</strong><span>modulos funcionales</span></div>
+          <div><strong>6</strong><span>módulos funcionales</span></div>
           <div><strong>300</strong><span>colaboradores demo</span></div>
           <div><strong>1</strong><span>dashboard gerencial</span></div>
         </div>
@@ -476,15 +476,15 @@ function SolutionPage({ setActivePage }) {
       <section className="manual-section">
         <div className="section-heading">
           <span className="eyebrow">Manual de usuario</span>
-          <h2>Recorrido por modulo</h2>
-          <p>Guia breve para presentar como se usa el sistema durante la defensa.</p>
+          <h2>Recorrido por módulo</h2>
+          <p>Guía breve para presentar como se usa el sistema durante la defensa.</p>
         </div>
         <ManualSteps />
       </section>
       <section className="faq-section">
         <div className="section-heading centered">
           <span className="eyebrow">Preguntas de defensa</span>
-          <h2>Respuestas rapidas para explicar el producto</h2>
+          <h2>Respuestas rápidas para explicar el producto</h2>
         </div>
         <div className="faq-grid">
           {faqs.map(([title, text]) => (
@@ -503,7 +503,7 @@ function SolutionPage({ setActivePage }) {
           <span className="eyebrow">Producto listo para demo</span>
           <h2>Ahora toca mostrarlo como software, no como tareas sueltas</h2>
           <p>
-            Usa el dashboard para demostrar vacantes, desempeno por usuario,
+            Usa el dashboard para demostrar vacantes, desempeño por usuario,
             asistencia y reportes con datos conectados.
           </p>
         </div>
@@ -519,11 +519,11 @@ function SolutionPage({ setActivePage }) {
 function ManualSteps() {
   const steps = [
     ["Reclutamiento", "Revisar vacantes abiertas, cargar CVs, aplicar filtro por palabras clave y consultar candidatos."],
-    ["Personal", "Registrar colaborador, asignar departamento y consultar plantilla filtrando por estado o area."],
+    ["Personal", "Registrar colaborador, asignar departamento y consultar plantilla filtrando por estado o área."],
     ["Control diario", "Marcar asistencia desde formulario web. Registra fecha, colaborador y presente/ausente; ausencias incluyen motivo."],
-    ["Desarrollo", "Seleccionar colaborador, registrar capacitacion o evaluacion y ver su porcentaje de desempeno."],
+    ["Desarrollo", "Seleccionar colaborador, registrar capacitación o evaluación y ver su porcentaje de desempeño."],
     ["Salida", "Registrar movimiento interno o salida definitiva con fecha, motivo y observaciones."],
-    ["Reportes", "Consultar KPIs, graficas y datos consolidados para tomar decisiones."],
+    ["Reportes", "Consultar KPIs, gráficas y datos consolidados para tomar decisiones."],
   ];
 
   return (
@@ -581,7 +581,7 @@ function DashboardWorkspace({ refreshKey, refresh, activeModule, setActiveModule
         <div className="admin-sidebar-card">
           <Settings2 size={18} />
           <strong>Demo operativa</strong>
-          <span>FastAPI + React con datos generados para presentacion.</span>
+          <span>FastAPI + React con datos generados para presentación.</span>
         </div>
       </aside>
       <section className="admin-main">
@@ -696,11 +696,11 @@ function DashboardPage({ refreshKey, refresh }) {
       <section className="metric-grid">
         <MetricCard label="Colaboradores" value={summary.total_colaboradores} detail={`${summary.activos} activos`} icon={UsersRound} />
         <MetricCard label="Asistencia" value={`${summary.tasa_asistencia}%`} detail={`${summary.ausencias} ausencias`} icon={Activity} tone="green" />
-        <MetricCard label="Desempeno" value={`${summary.desempeno_promedio}%`} detail="Promedio neto" icon={BookOpenCheck} tone="cyan" />
-        <MetricCard label="Rotacion" value={`${summary.rotacion}%`} detail={`${summary.terminados} salidas`} icon={LogOut} tone="lime" />
+        <MetricCard label="Desempeño" value={`${summary.desempeno_promedio}%`} detail="Promedio neto" icon={BookOpenCheck} tone="cyan" />
+        <MetricCard label="Rotación" value={`${summary.rotacion}%`} detail={`${summary.terminados} salidas`} icon={LogOut} tone="lime" />
       </section>
       <section className="dashboard-grid">
-        <Panel title="Distribucion por departamento" subtitle="Plantilla actual por area">
+        <Panel title="Distribución por departamento" subtitle="Plantilla actual por área">
           <ResponsiveContainer width="100%" height={310}>
             <PieChart>
               <Pie data={departmentData} dataKey="value" nameKey="name" innerRadius={62} outerRadius={105} paddingAngle={2}>
@@ -711,7 +711,7 @@ function DashboardPage({ refreshKey, refresh }) {
           </ResponsiveContainer>
           <DepartmentLegend items={departmentData} />
         </Panel>
-        <Panel title="Desempeno por departamento" subtitle="Promedio neto de evaluacion">
+        <Panel title="Desempeño por departamento" subtitle="Promedio neto de evaluación">
           <ResponsiveContainer width="100%" height={340}>
             <BarChart data={performanceData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -763,7 +763,7 @@ function RecruitmentPage({ refreshKey }) {
   return (
     <>
       <PageHeader
-        eyebrow="Modulo 1"
+        eyebrow="Módulo 1"
         title="Reclutamiento"
         description="Vacantes, hojas de vida, filtro de candidatos y reporte del pipeline."
       />
@@ -787,7 +787,7 @@ function RecruitmentPage({ refreshKey }) {
           ))}
         </div>
       </Panel>
-      <Panel title="Reporte de candidatos" subtitle="Datos provenientes del modulo de reclutamiento existente">
+      <Panel title="Reporte de candidatos" subtitle="Datos provenientes del módulo de reclutamiento existente">
         <DataTable columns={columns} rows={records} emptyText="Aun no hay reporte CSV de reclutamiento." />
       </Panel>
     </>
@@ -842,7 +842,7 @@ function EmployeesPage({ refreshKey, refresh }) {
   return (
     <>
       <PageHeader
-        eyebrow="Modulo 2"
+        eyebrow="Módulo 2"
         title="Personal"
         description="Registro maestro de colaboradores, ingreso laboral, estructura organizacional y consulta de plantilla."
       />
@@ -851,11 +851,11 @@ function EmployeesPage({ refreshKey, refresh }) {
           <Notice>{message}</Notice>
           <Notice type="error">{errorMessage}</Notice>
           <FormGrid onSubmit={submit} busy={saving} buttonLabel="Registrar colaborador">
-            <Field label="Cedula"><input required value={form.numero_cedula} onChange={(e) => setForm({ ...form, numero_cedula: e.target.value })} /></Field>
+            <Field label="Cédula"><input required value={form.numero_cedula} onChange={(e) => setForm({ ...form, numero_cedula: e.target.value })} /></Field>
             <Field label="Nombre"><input required value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} /></Field>
             <Field label="Apellido"><input required value={form.apellido} onChange={(e) => setForm({ ...form, apellido: e.target.value })} /></Field>
             <Field label="Nacimiento"><input type="date" required value={form.fecha_nacimiento} onChange={(e) => setForm({ ...form, fecha_nacimiento: e.target.value })} /></Field>
-            <Field label="Telefono"><input required value={form.telefono_principal} onChange={(e) => setForm({ ...form, telefono_principal: e.target.value })} /></Field>
+            <Field label="Teléfono"><input required value={form.telefono_principal} onChange={(e) => setForm({ ...form, telefono_principal: e.target.value })} /></Field>
             <Field label="Puesto"><input required value={form.puesto} onChange={(e) => setForm({ ...form, puesto: e.target.value })} /></Field>
             <Field label="Departamento">
               <select required value={form.id_departamento} onChange={(e) => setForm({ ...form, id_departamento: e.target.value })}>
@@ -863,7 +863,7 @@ function EmployeesPage({ refreshKey, refresh }) {
               </select>
             </Field>
             <Field label="Ingreso"><input type="date" required value={form.fecha_ingreso} onChange={(e) => setForm({ ...form, fecha_ingreso: e.target.value })} /></Field>
-            <Field label="Direccion"><input required value={form.direccion} onChange={(e) => setForm({ ...form, direccion: e.target.value })} /></Field>
+            <Field label="Dirección"><input required value={form.direccion} onChange={(e) => setForm({ ...form, direccion: e.target.value })} /></Field>
           </FormGrid>
         </Panel>
         <Panel title="Departamentos" subtitle="Estructura organizacional">
@@ -871,7 +871,7 @@ function EmployeesPage({ refreshKey, refresh }) {
             columns={[
               { key: "nombre_departamento", label: "Departamento" },
               { key: "colaboradores", label: "Colaboradores" },
-              { key: "descripcion", label: "Descripcion" },
+              { key: "descripcion", label: "Descripción" },
             ]}
             rows={departments.data || []}
           />
@@ -897,7 +897,7 @@ function EmployeesPage({ refreshKey, refresh }) {
             { key: "departamento", label: "Departamento" },
             { key: "puesto", label: "Puesto" },
             { key: "estado", label: "Estado", render: (value) => <StatusBadge value={value} /> },
-            { key: "pct_desempeno", label: "Desempeno", render: (value) => value ? `${value}%` : "-" },
+            { key: "pct_desempeno", label: "Desempeño", render: (value) => value ? `${value}%` : "-" },
           ]}
           rows={employees.data || []}
         />
@@ -940,15 +940,15 @@ function DailyPage({ refreshKey, refresh }) {
   return (
     <>
       <PageHeader
-        eyebrow="Modulo 3"
+        eyebrow="Módulo 3"
         title="Control diario"
         description="Marcado digital de asistencia y registro de ausencias/vacaciones."
       />
       <Panel title="Tipo de marcado de asistencia" subtitle="Propuesta para el cliente">
         <p className="soft-text">
           La demo utiliza marcado web por formulario: se selecciona colaborador, fecha y estado.
-          En una version productiva puede integrarse con codigo QR, reloj biometrico, geolocalizacion
-          o validacion desde dispositivo autorizado.
+          En una versión productiva puede integrarse con código QR, reloj biométrico, geolocalización
+          o validación desde dispositivo autorizado.
         </p>
       </Panel>
       <Notice>{message}</Notice>
@@ -978,14 +978,14 @@ function DailyPage({ refreshKey, refresh }) {
             <EmployeeSelect value={vacation.codigo_empresa} options={options.data} onChange={(value) => setVacation({ ...vacation, codigo_empresa: value })} />
             <Field label="Inicio"><input type="date" value={vacation.fecha_inicio} onChange={(e) => setVacation({ ...vacation, fecha_inicio: e.target.value })} /></Field>
             <Field label="Fin"><input type="date" value={vacation.fecha_fin} onChange={(e) => setVacation({ ...vacation, fecha_fin: e.target.value })} /></Field>
-            <Field label="Observacion"><input value={vacation.observaciones} onChange={(e) => setVacation({ ...vacation, observaciones: e.target.value })} /></Field>
+            <Field label="Observación"><input value={vacation.observaciones} onChange={(e) => setVacation({ ...vacation, observaciones: e.target.value })} /></Field>
           </FormGrid>
         </Panel>
       </section>
-      <Panel title="Registros recientes" subtitle="Ultimos movimientos de control diario">
+      <Panel title="Registros recientes" subtitle="Últimos movimientos de control diario">
         <DataTable
           columns={[
-            { key: "codigo_empresa", label: "Codigo" },
+            { key: "codigo_empresa", label: "Código" },
             { key: "empleado", label: "Empleado" },
             { key: "fecha", label: "Fecha" },
             { key: "presente", label: "Estado", render: (value) => <StatusBadge value={value ? "Presente" : "Ausente"} /> },
@@ -1034,21 +1034,21 @@ function DevelopmentPage({ refreshKey, refresh }) {
   return (
     <>
       <PageHeader
-        eyebrow="Modulo 4"
+        eyebrow="Módulo 4"
         title="Desarrollo"
-        description="Capacitaciones y evaluacion de desempeno por colaborador, con filtro individual."
+        description="Capacitaciones y evaluación de desempeño por colaborador, con filtro individual."
       />
       <Notice>{message}</Notice>
       <Notice type="error">{error}</Notice>
       <section className="split-grid">
-        <Panel title="Evaluacion por usuario" subtitle="Filtra un colaborador y consulta su porcentaje">
+        <Panel title="Evaluación por usuario" subtitle="Filtra un colaborador y consulta su porcentaje">
           <div className="toolbar">
             <EmployeeSelect value={selectedEmployee} options={options.data} onChange={setSelectedEmployee} />
           </div>
           <div className="score-card">
-            <span>Desempeno neto actual</span>
+            <span>Desempeño neto actual</span>
             <strong>{latestEvaluation ? `${latestEvaluation.pct_neto}%` : "Sin evaluacion"}</strong>
-            <small>{latestEvaluation ? `Ultima evaluacion: ${latestEvaluation.fecha_evaluacion}` : "Registra una evaluacion para ver el resultado."}</small>
+            <small>{latestEvaluation ? `Última evaluacion: ${latestEvaluation.fecha_evaluacion}` : "Registra una evaluacion para ver el resultado."}</small>
           </div>
           <DataTable
             columns={[
@@ -1059,20 +1059,20 @@ function DevelopmentPage({ refreshKey, refresh }) {
             rows={evaluations.data || []}
           />
         </Panel>
-        <Panel title="Nueva capacitacion">
-          <FormGrid onSubmit={(e) => submit(e, api.recordTraining, training, "Capacitacion")} buttonLabel="Guardar capacitacion">
+        <Panel title="Nueva capacitación">
+          <FormGrid onSubmit={(e) => submit(e, api.recordTraining, training, "Capacitacion")} buttonLabel="Guardar capacitación">
             <EmployeeSelect value={training.codigo_empresa} options={options.data} onChange={(value) => setTraining({ ...training, codigo_empresa: value })} />
-            <Field label="Capacitacion"><input value={training.nombre_capacitacion} onChange={(e) => setTraining({ ...training, nombre_capacitacion: e.target.value })} /></Field>
+            <Field label="Capacitación"><input value={training.nombre_capacitacion} onChange={(e) => setTraining({ ...training, nombre_capacitacion: e.target.value })} /></Field>
             <Field label="Inicio"><input type="date" value={training.fecha_inicio} onChange={(e) => setTraining({ ...training, fecha_inicio: e.target.value })} /></Field>
             <Field label="Fin"><input type="date" value={training.fecha_fin} onChange={(e) => setTraining({ ...training, fecha_fin: e.target.value })} /></Field>
           </FormGrid>
         </Panel>
       </section>
-      <Panel title="Registrar evaluacion de desempeno">
-        <FormGrid onSubmit={(e) => submit(e, api.recordEvaluation, { ...evaluation, pct_bruto: Number(evaluation.pct_bruto) }, "Evaluacion")} buttonLabel="Guardar evaluacion">
+      <Panel title="Registrar evaluación de desempeño">
+        <FormGrid onSubmit={(e) => submit(e, api.recordEvaluation, { ...evaluation, pct_bruto: Number(evaluation.pct_bruto) }, "Evaluacion")} buttonLabel="Guardar evaluación">
           <EmployeeSelect value={evaluation.codigo_empresa} options={options.data} onChange={(value) => setEvaluation({ ...evaluation, codigo_empresa: value })} />
           <Field label="Fecha"><input type="date" value={evaluation.fecha_evaluacion} onChange={(e) => setEvaluation({ ...evaluation, fecha_evaluacion: e.target.value })} /></Field>
-          <Field label="Puntuacion bruta"><input type="number" min="0" max="100" value={evaluation.pct_bruto} onChange={(e) => setEvaluation({ ...evaluation, pct_bruto: e.target.value })} /></Field>
+          <Field label="Puntuación bruta"><input type="number" min="0" max="100" value={evaluation.pct_bruto} onChange={(e) => setEvaluation({ ...evaluation, pct_bruto: e.target.value })} /></Field>
         </FormGrid>
       </Panel>
       <section className="split-grid">
@@ -1080,7 +1080,7 @@ function DevelopmentPage({ refreshKey, refresh }) {
           <DataTable
             columns={[
               { key: "empleado", label: "Empleado" },
-              { key: "nombre_capacitacion", label: "Capacitacion" },
+              { key: "nombre_capacitacion", label: "Capacitación" },
               { key: "fecha_inicio", label: "Inicio" },
               { key: "fecha_fin", label: "Fin" },
             ]}
@@ -1137,7 +1137,7 @@ function ExitPage({ refreshKey, refresh }) {
 
   return (
     <>
-      <PageHeader eyebrow="Modulo 5" title="Salida y movimientos" description="Registro de promociones, traslados y salida definitiva." />
+      <PageHeader eyebrow="Módulo 5" title="Salida y movimientos" description="Registro de promociones, traslados y salida definitiva." />
       <Notice>{message}</Notice>
       <Notice type="error">{error}</Notice>
       <section className="split-grid">
@@ -1159,7 +1159,7 @@ function ExitPage({ refreshKey, refresh }) {
             <EmployeeSelect value={termination.codigo_empresa} options={options.data} onChange={(value) => setTermination({ ...termination, codigo_empresa: value })} />
             <Field label="Fecha"><input type="date" value={termination.fecha_salida} onChange={(e) => setTermination({ ...termination, fecha_salida: e.target.value })} /></Field>
             <Field label="Motivo"><input value={termination.motivo_salida} onChange={(e) => setTermination({ ...termination, motivo_salida: e.target.value })} /></Field>
-            <Field label="Observacion"><input value={termination.observaciones} onChange={(e) => setTermination({ ...termination, observaciones: e.target.value })} /></Field>
+            <Field label="Observación"><input value={termination.observaciones} onChange={(e) => setTermination({ ...termination, observaciones: e.target.value })} /></Field>
           </FormGrid>
         </Panel>
       </section>
@@ -1203,14 +1203,14 @@ function ReportsPage({ refreshKey, refresh }) {
   return (
     <>
       <PageHeader
-        eyebrow="Modulo 6"
+        eyebrow="Módulo 6"
         title="Reportes gerenciales"
-        description="Panel consolidado para analizar plantilla, rotacion, asistencia y desempeno."
+        description="Panel consolidado para analizar plantilla, rotación, asistencia y desempeno."
         actions={<button className="ghost-button" onClick={refresh}><RefreshCw size={16} />Actualizar</button>}
       />
       <section className="metric-grid four">
         <MetricCard label="Plantilla activa" value={data.summary.activos} icon={UsersRound} />
-        <MetricCard label="Rotacion" value={`${data.summary.rotacion}%`} icon={LogOut} tone="lime" />
+        <MetricCard label="Rotación" value={`${data.summary.rotacion}%`} icon={LogOut} tone="lime" />
         <MetricCard label="Capacitaciones" value={data.summary.capacitaciones} icon={Brain} tone="green" />
         <MetricCard label="Ausencias" value={data.summary.ausencias} icon={ClipboardList} tone="cyan" />
       </section>
