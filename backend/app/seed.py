@@ -218,7 +218,7 @@ def seed_demo_data(db: Session, employee_count: int = 300, force: bool = False) 
                 puesto_nuevo=new_position,
                 depto_anterior=dep.id_departamento,
                 depto_nuevo=new_dep.id_departamento,
-                motivo=random.choice(["Promocion interna", "Necesidad operativa", "Reorganizacion", "Desarrollo profesional"]),
+                motivo=random.choice(["Promoción interna", "Necesidad operativa", "Reorganización", "Desarrollo profesional"]),
             )
         )
 

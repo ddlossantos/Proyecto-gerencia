@@ -6,18 +6,18 @@ Fuente: `docs/PROYECTO SEMESTRAL (2).docx`.
 
 Diseñar un sistema digital de gestión de Recursos Humanos que permita centralizar, automatizar y analizar los procesos del talento humano en una empresa de 300 colaboradores, con el fin de mejorar la eficiencia operativa y la toma de decisiones.
 
-## Objetivos especificos
+## Objetivos específicos
 
 - Digitalizar los procesos clave de Recursos Humanos: reclutamiento, ingreso, control de asistencia, vacaciones, capacitaciones y salida de personal.
 - Centralizar la información del colaborador en una base de datos confiable y accesible.
-- Disenar formularios y pantallas funcionales para registrar y dar seguimiento a cada proceso.
+- Diseñar formularios y pantallas funcionales para registrar y dar seguimiento a cada proceso.
 - Generar reportes e indicadores clave como rotación, ausencias, vacaciones y capacitaciones.
 - Implementar análisis para identificar tendencias y problemas en la gestión del talento.
 - Reducir errores operativos y duplicidad de información mediante automatización.
 - Apoyar decisiones gerenciales con datos en tiempo real.
 - Proponer una solución escalable y adaptable a diferentes empresas.
 
-## Modulos requeridos
+## Módulos requeridos
 
 - Módulo 1: Reclutamiento, recepción de hojas de vida y filtro de candidatos.
 - Módulo 2: Personal, ingreso, historial del colaborador y estructura organizacional.
@@ -26,7 +26,7 @@ Diseñar un sistema digital de gestión de Recursos Humanos que permita centrali
 - Módulo 5: Salida, registro y motivos de salida.
 - Módulo 6: Reportes, indicadores y dashboard gerencial.
 
-## Expectativa de construccion
+## Expectativa de construcción
 
 Cada módulo debe tener pantallas o formularios, base de datos y reportes. La expectativa es presentar una herramienta en ejecución, no solamente una propuesta.
 
@@ -34,7 +34,7 @@ Cada módulo debe tener pantallas o formularios, base de datos y reportes. La ex
 
 - Líder del proyecto: coordina todo.
 - Analista de RRHH: define procesos.
-- Disenador: crea pantallas.
+- Diseñador: crea pantallas.
 - Encargado de datos: arma la base de datos.
 - Presentador: prepara la defensa.
 

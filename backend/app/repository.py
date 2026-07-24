@@ -1,5 +1,6 @@
 from io import BytesIO
 from pathlib import Path
+from datetime import date
 import re
 from typing import Any
 import unicodedata
@@ -525,41 +526,201 @@ def recent_records(db: Session) -> dict[str, Any]:
     }
 
 
-def dashboard(db: Session) -> dict[str, Any]:
-    total = db.query(models.Employee).count()
-    active = db.query(models.Employee).filter(models.Employee.estado == "activo").count()
-    terminated = total - active
-    attendance_total = db.query(models.Attendance).count()
-    present_total = db.query(models.Attendance).filter(models.Attendance.presente.is_(True)).count()
+def employee_workspace(db: Session, codigo_empresa: str) -> dict[str, Any]:
+    employee = (
+        db.query(models.Employee)
+        .options(joinedload(models.Employee.personal).joinedload(models.Personnel.departamento))
+        .filter(models.Employee.codigo_empresa == codigo_empresa)
+        .first()
+    )
+    if not employee:
+        raise ValueError("El colaborador indicado no existe.")
+
+    return {
+        "profile": employee_to_dict(employee),
+        "asistencias": [
+            attendance_to_dict(row)
+            for row in (
+                db.query(models.Attendance)
+                .options(joinedload(models.Attendance.empleado))
+                .filter(models.Attendance.codigo_empresa == codigo_empresa)
+                .order_by(desc(models.Attendance.fecha))
+                .limit(15)
+            )
+        ],
+        "ausencias": [
+            absence_to_dict(row)
+            for row in (
+                db.query(models.Absence)
+                .options(joinedload(models.Absence.empleado))
+                .filter(models.Absence.codigo_empresa == codigo_empresa)
+                .order_by(desc(models.Absence.fecha))
+                .limit(15)
+            )
+        ],
+        "vacaciones": [
+            vacation_to_dict(row)
+            for row in (
+                db.query(models.Vacation)
+                .options(joinedload(models.Vacation.empleado))
+                .filter(models.Vacation.codigo_empresa == codigo_empresa)
+                .order_by(desc(models.Vacation.fecha_inicio))
+                .limit(15)
+            )
+        ],
+        "capacitaciones": [
+            training_to_dict(row)
+            for row in (
+                db.query(models.Training)
+                .options(joinedload(models.Training.empleado))
+                .filter(models.Training.codigo_empresa == codigo_empresa)
+                .order_by(desc(models.Training.fecha_inicio))
+                .limit(15)
+            )
+        ],
+        "evaluaciones": [
+            evaluation_to_dict(row)
+            for row in (
+                db.query(models.PerformanceEvaluation)
+                .options(joinedload(models.PerformanceEvaluation.empleado))
+                .filter(models.PerformanceEvaluation.codigo_empresa == codigo_empresa)
+                .order_by(desc(models.PerformanceEvaluation.fecha_evaluacion))
+                .limit(15)
+            )
+        ],
+        "movimientos": [
+            movement_to_dict(row)
+            for row in (
+                db.query(models.Movement)
+                .options(joinedload(models.Movement.empleado))
+                .filter(models.Movement.codigo_empresa == codigo_empresa)
+                .order_by(desc(models.Movement.fecha_movimiento))
+                .limit(15)
+            )
+        ],
+    }
+
+
+def dashboard(
+    db: Session,
+    start_date: date | None = None,
+    end_date: date | None = None,
+    department_id: int | None = None,
+    status: str | None = None,
+) -> dict[str, Any]:
+    employee_filters = []
+    if department_id:
+        employee_filters.append(models.Personnel.id_departamento == department_id)
+    if status and status != "todos":
+        employee_filters.append(models.Employee.estado == status)
+
+    employee_query = db.query(models.Employee).join(models.Personnel)
+    if employee_filters:
+        employee_query = employee_query.filter(*employee_filters)
+
+    total = employee_query.count()
+    active = employee_query.filter(models.Employee.estado == "activo").count()
+    terminated = employee_query.filter(models.Employee.estado != "activo").count()
+
+    attendance_query = (
+        db.query(models.Attendance)
+        .join(models.Personnel, models.Personnel.codigo_empresa == models.Attendance.codigo_empresa)
+        .join(models.Employee, models.Employee.codigo_empresa == models.Attendance.codigo_empresa)
+    )
+    if employee_filters:
+        attendance_query = attendance_query.filter(*employee_filters)
+    if start_date:
+        attendance_query = attendance_query.filter(models.Attendance.fecha >= start_date)
+    if end_date:
+        attendance_query = attendance_query.filter(models.Attendance.fecha <= end_date)
+
+    attendance_total = attendance_query.count()
+    present_total = attendance_query.filter(models.Attendance.presente.is_(True)).count()
     attendance_rate = round((present_total / attendance_total) * 100, 1) if attendance_total else 0
-    absence_total = db.query(models.Absence).count()
-    training_total = db.query(models.Training).count()
-    avg_performance = db.query(func.avg(models.Employee.pct_desempeno)).scalar() or 0
+
+    absence_query = (
+        db.query(models.Absence)
+        .join(models.Personnel, models.Personnel.codigo_empresa == models.Absence.codigo_empresa)
+        .join(models.Employee, models.Employee.codigo_empresa == models.Absence.codigo_empresa)
+    )
+    if employee_filters:
+        absence_query = absence_query.filter(*employee_filters)
+    if start_date:
+        absence_query = absence_query.filter(models.Absence.fecha >= start_date)
+    if end_date:
+        absence_query = absence_query.filter(models.Absence.fecha <= end_date)
+    absence_total = absence_query.count()
+
+    training_query = (
+        db.query(models.Training)
+        .join(models.Personnel, models.Personnel.codigo_empresa == models.Training.codigo_empresa)
+        .join(models.Employee, models.Employee.codigo_empresa == models.Training.codigo_empresa)
+    )
+    if employee_filters:
+        training_query = training_query.filter(*employee_filters)
+    if start_date:
+        training_query = training_query.filter(models.Training.fecha_inicio >= start_date)
+    if end_date:
+        training_query = training_query.filter(models.Training.fecha_inicio <= end_date)
+    training_total = training_query.count()
+
+    performance_query = (
+        db.query(models.PerformanceEvaluation)
+        .join(models.Personnel, models.Personnel.codigo_empresa == models.PerformanceEvaluation.codigo_empresa)
+        .join(models.Employee, models.Employee.codigo_empresa == models.PerformanceEvaluation.codigo_empresa)
+    )
+    if employee_filters:
+        performance_query = performance_query.filter(*employee_filters)
+    if start_date:
+        performance_query = performance_query.filter(models.PerformanceEvaluation.fecha_evaluacion >= start_date)
+    if end_date:
+        performance_query = performance_query.filter(models.PerformanceEvaluation.fecha_evaluacion <= end_date)
+    avg_performance = performance_query.with_entities(func.avg(models.PerformanceEvaluation.pct_neto)).scalar() or 0
     rotation_rate = round((terminated / total) * 100, 1) if total else 0
 
     department_count = func.count(models.Personnel.id_personal)
+    active_count = func.sum(case((models.Employee.estado == "activo", 1), else_=0))
+    terminated_count = func.sum(case((models.Employee.estado != "activo", 1), else_=0))
     by_department = (
         db.query(
             models.Department.nombre_departamento.label("name"),
             department_count.label("value"),
+            active_count.label("activos"),
+            terminated_count.label("terminados"),
         )
-        .outerjoin(models.Personnel)
+        .outerjoin(models.Personnel, models.Personnel.id_departamento == models.Department.id_departamento)
+        .outerjoin(models.Employee, models.Employee.codigo_empresa == models.Personnel.codigo_empresa)
         .group_by(models.Department.id_departamento)
         .order_by(department_count.desc())
-        .all()
     )
+    if department_id:
+        by_department = by_department.filter(models.Department.id_departamento == department_id)
+    if status and status != "todos":
+        by_department = by_department.filter(models.Employee.estado == status)
+    by_department = by_department.all()
 
     performance_by_department = (
         db.query(
             models.Department.nombre_departamento.label("departamento"),
-            func.round(func.avg(models.Employee.pct_desempeno), 1).label("promedio"),
+            func.round(func.avg(models.PerformanceEvaluation.pct_neto), 1).label("promedio"),
+            func.count(models.PerformanceEvaluation.id_evaluacion).label("evaluaciones"),
         )
         .join(models.Personnel, models.Personnel.id_departamento == models.Department.id_departamento)
         .join(models.Employee, models.Employee.codigo_empresa == models.Personnel.codigo_empresa)
+        .join(models.PerformanceEvaluation, models.PerformanceEvaluation.codigo_empresa == models.Employee.codigo_empresa)
         .group_by(models.Department.id_departamento)
         .order_by(models.Department.nombre_departamento)
-        .all()
     )
+    if employee_filters:
+        performance_by_department = performance_by_department.filter(*employee_filters)
+    if start_date:
+        performance_by_department = performance_by_department.filter(models.PerformanceEvaluation.fecha_evaluacion >= start_date)
+    if end_date:
+        performance_by_department = performance_by_department.filter(models.PerformanceEvaluation.fecha_evaluacion <= end_date)
+    performance_by_department = performance_by_department.all()
+
+    present_count = func.sum(case((models.Attendance.presente.is_(True), 1), else_=0))
+    absent_count = func.sum(case((models.Attendance.presente.is_(False), 1), else_=0))
 
     attendance_by_department = (
         db.query(
@@ -568,16 +729,45 @@ def dashboard(db: Session) -> dict[str, Any]:
                 func.avg(case((models.Attendance.presente.is_(True), 100.0), else_=0.0)),
                 1,
             ).label("asistencia"),
+            present_count.label("presentes"),
+            absent_count.label("ausentes"),
+            func.count(models.Attendance.id_asistencia).label("registros"),
         )
         .join(models.Personnel, models.Personnel.id_departamento == models.Department.id_departamento)
+        .join(models.Employee, models.Employee.codigo_empresa == models.Personnel.codigo_empresa)
         .join(models.Attendance, models.Attendance.codigo_empresa == models.Personnel.codigo_empresa)
         .group_by(models.Department.id_departamento)
         .order_by(models.Department.nombre_departamento)
+    )
+    if employee_filters:
+        attendance_by_department = attendance_by_department.filter(*employee_filters)
+    if start_date:
+        attendance_by_department = attendance_by_department.filter(models.Attendance.fecha >= start_date)
+    if end_date:
+        attendance_by_department = attendance_by_department.filter(models.Attendance.fecha <= end_date)
+    attendance_by_department = attendance_by_department.all()
+
+    performance_by_employee = (
+        performance_query
+        .options(joinedload(models.PerformanceEvaluation.empleado))
+        .order_by(desc(models.PerformanceEvaluation.pct_neto))
+        .limit(8)
         .all()
     )
 
     monthly_counts: dict[str, int] = {}
-    for row in db.query(models.Termination).all():
+    termination_query = (
+        db.query(models.Termination)
+        .join(models.Personnel, models.Personnel.codigo_empresa == models.Termination.codigo_empresa)
+        .join(models.Employee, models.Employee.codigo_empresa == models.Termination.codigo_empresa)
+    )
+    if employee_filters:
+        termination_query = termination_query.filter(*employee_filters)
+    if start_date:
+        termination_query = termination_query.filter(models.Termination.fecha_salida >= start_date)
+    if end_date:
+        termination_query = termination_query.filter(models.Termination.fecha_salida <= end_date)
+    for row in termination_query.all():
         key = row.fecha_salida.strftime("%Y-%m")
         monthly_counts[key] = monthly_counts.get(key, 0) + 1
 
@@ -592,14 +782,46 @@ def dashboard(db: Session) -> dict[str, Any]:
             "desempeno_promedio": round(avg_performance, 1),
             "rotacion": rotation_rate,
         },
-        "by_department": [{"name": row.name, "value": row.value} for row in by_department],
+        "filters": {
+            "start_date": start_date,
+            "end_date": end_date,
+            "department_id": department_id,
+            "status": status or "todos",
+        },
+        "status_breakdown": [
+            {"name": "Activos", "value": active},
+            {"name": "Inactivos", "value": terminated},
+        ],
+        "by_department": [
+            {
+                "name": row.name,
+                "value": row.value,
+                "activos": row.activos or 0,
+                "terminados": row.terminados or 0,
+            }
+            for row in by_department
+        ],
         "performance_by_department": [
-            {"departamento": row.departamento, "promedio": row.promedio or 0}
+            {
+                "departamento": row.departamento,
+                "promedio": row.promedio or 0,
+                "evaluaciones": row.evaluaciones or 0,
+            }
             for row in performance_by_department
         ],
         "attendance_by_department": [
-            {"departamento": row.departamento, "asistencia": row.asistencia or 0}
+            {
+                "departamento": row.departamento,
+                "asistencia": row.asistencia or 0,
+                "presentes": row.presentes or 0,
+                "ausentes": row.ausentes or 0,
+                "registros": row.registros or 0,
+            }
             for row in attendance_by_department
+        ],
+        "performance_by_employee": [
+            evaluation_to_dict(row)
+            for row in performance_by_employee
         ],
         "monthly_exits": [
             {"mes": key, "salidas": monthly_counts[key]}

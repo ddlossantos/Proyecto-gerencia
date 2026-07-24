@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Activity,
   ArrowRight,
+  BadgeDollarSign,
   BarChart3,
   BookOpenCheck,
   Brain,
@@ -10,9 +11,12 @@ import {
   CalendarCheck,
   ChevronRight,
   CheckCircle2,
+  CircleUserRound,
   ClipboardList,
   Database,
+  FileDown,
   FileSearch,
+  Filter,
   Handshake,
   HelpCircle,
   Home,
@@ -22,23 +26,21 @@ import {
   MonitorCheck,
   Moon,
   PieChart as PieChartIcon,
+  Printer,
   RefreshCw,
   Settings2,
   ShieldCheck,
   Sun,
   UserCheck,
+  UserRoundCog,
   UsersRound,
 } from "lucide-react";
 import {
-  Area,
-  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
   Cell,
   LabelList,
-  Pie,
-  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -47,6 +49,7 @@ import {
 import { api } from "./api";
 import {
   DataTable,
+  EmptyState,
   Field,
   FormGrid,
   LastUpdated,
@@ -59,33 +62,36 @@ import {
 } from "./components.jsx";
 
 const today = new Date().toISOString().slice(0, 10);
+const defaultStartDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 90)
+  .toISOString()
+  .slice(0, 10);
 
 const departmentPalette = {
-  Calidad: "#0f766e",
+  Calidad: "#0e7490",
   Compras: "#2563eb",
-  "Dirección General": "#7c3aed",
-  Finanzas: "#f59e0b",
+  "Dirección General": "#475569",
+  Finanzas: "#d97706",
   Legal: "#dc2626",
   Logística: "#0891b2",
   Marketing: "#65a30d",
-  Operaciones: "#be185d",
-  "Recursos Humanos": "#0d9488",
-  "Servicio al Cliente": "#9333ea",
+  Operaciones: "#db2777",
+  "Recursos Humanos": "#0f766e",
+  "Servicio al Cliente": "#4f46e5",
   Tecnología: "#ea580c",
   Ventas: "#16a34a",
 };
 
 const fallbackColors = [
-  "#0f766e",
+  "#0e7490",
   "#2563eb",
-  "#7c3aed",
-  "#f59e0b",
+  "#475569",
+  "#d97706",
   "#dc2626",
   "#0891b2",
   "#65a30d",
-  "#be185d",
-  "#0d9488",
-  "#9333ea",
+  "#db2777",
+  "#0f766e",
+  "#4f46e5",
   "#ea580c",
   "#16a34a",
 ];
@@ -93,6 +99,7 @@ const fallbackColors = [
 const mainTabs = [
   { id: "home", label: "Inicio", icon: Home },
   { id: "solution", label: "Solución", icon: Handshake },
+  { id: "pricing", label: "Planes", icon: BadgeDollarSign },
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
@@ -136,6 +143,46 @@ const productModules = [
     title: "Reportes",
     text: "Indicadores para gerencia sobre plantilla, asistencia, rotación, desempeño y departamentos.",
     icon: BarChart3,
+  },
+];
+
+const pricingTiers = [
+  {
+    name: "Básico",
+    price: "B/. 49",
+    cadence: "mensual",
+    description: "Para equipos pequeños que necesitan ordenar expedientes y asistencia.",
+    features: [
+      "Hasta 75 colaboradores",
+      "Personal y control diario",
+      "Dashboard básico",
+      "Reporte imprimible mensual",
+    ],
+  },
+  {
+    name: "Personal",
+    price: "B/. 129",
+    cadence: "mensual",
+    description: "Para empresas en crecimiento que necesitan operar todo el ciclo de RR. HH.",
+    featured: true,
+    features: [
+      "Hasta 300 colaboradores",
+      "Reclutamiento, desarrollo y salida",
+      "Vista de administrador y empleado",
+      "Filtros por fecha, estado y departamento",
+    ],
+  },
+  {
+    name: "Empresarial",
+    price: "Cotización personalizada",
+    cadence: "según el caso",
+    description: "Para organizaciones que requieren integración, soporte y reglas particulares.",
+    features: [
+      "Colaboradores ilimitados según alcance",
+      "Integración con MySQL y sistemas internos",
+      "Marcado QR, biometría o geolocalización",
+      "Soporte y reportes a medida",
+    ],
   },
 ];
 
@@ -218,6 +265,7 @@ function App() {
     return {
       home: <HomePage {...props} />,
       solution: <SolutionPage {...props} />,
+      pricing: <PricingPage {...props} />,
       dashboard: <DashboardWorkspace {...props} />,
     }[activePage];
   }, [activePage, activeModule, refreshKey]);
@@ -303,7 +351,7 @@ function HomePage({ setActivePage }) {
           <div className="hero-proof">
             <span><CheckCircle2 size={16} /> 6 módulos conectados</span>
             <span><CheckCircle2 size={16} /> Data demo con 300 colaboradores</span>
-            <span><CheckCircle2 size={16} /> API FastAPI en ejecucion</span>
+            <span><CheckCircle2 size={16} /> API FastAPI en ejecución</span>
           </div>
         </div>
         <div className="product-visual" aria-label="Vista conceptual del software">
@@ -499,7 +547,7 @@ function SolutionPage({ setActivePage }) {
       <section className="faq-section">
         <div className="section-heading centered">
           <span className="eyebrow">Preguntas de defensa</span>
-          <h2>Respuestas rapidas para explicar el producto</h2>
+          <h2>Respuestas rápidas para explicar el producto</h2>
         </div>
         <div className="faq-grid">
           {faqs.map(([title, text]) => (
@@ -525,6 +573,65 @@ function SolutionPage({ setActivePage }) {
         <button className="primary-button standalone" onClick={() => setActivePage("dashboard")}>
           <MonitorCheck size={18} />
           Abrir demo
+        </button>
+      </section>
+    </>
+  );
+}
+
+function PricingPage({ setActivePage }) {
+  return (
+    <>
+      <section className="pricing-hero">
+        <div>
+          <span className="eyebrow">Planes comerciales</span>
+          <h1>Paquetes para vender Talento 360</h1>
+          <p>
+            Tres niveles para presentar la solución como software: entrada accesible,
+            operación completa y propuesta empresarial adaptable al cliente.
+          </p>
+        </div>
+        <button className="primary-button standalone" onClick={() => setActivePage("dashboard")}>
+          <MonitorCheck size={17} />
+          Ver demo funcional
+        </button>
+      </section>
+      <section className="pricing-grid">
+        {pricingTiers.map((tier) => (
+          <article className={`pricing-card ${tier.featured ? "featured" : ""}`} key={tier.name}>
+            {tier.featured && <span className="pricing-badge">Recomendado para la demo</span>}
+            <div className="pricing-icon">
+              <BadgeDollarSign size={22} />
+            </div>
+            <h2>{tier.name}</h2>
+            <p>{tier.description}</p>
+            <div className="price-value">
+              <strong>{tier.price}</strong>
+              <span>{tier.cadence}</span>
+            </div>
+            <ul>
+              {tier.features.map((feature) => (
+                <li key={feature}>
+                  <CheckCircle2 size={16} />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </section>
+      <section className="cta-panel">
+        <div>
+          <span className="eyebrow">Argumento de venta</span>
+          <h2>El precio se defiende con ahorro operativo y trazabilidad</h2>
+          <p>
+            La propuesta no solo cobra por pantallas: cobra por centralizar datos,
+            reducir tareas manuales y entregar indicadores para decisiones de gerencia.
+          </p>
+        </div>
+        <button className="primary-button standalone" onClick={() => setActivePage("solution")}>
+          <Handshake size={18} />
+          Revisar solución
         </button>
       </section>
     </>
@@ -557,6 +664,9 @@ function ManualSteps() {
 }
 
 function DashboardWorkspace({ refreshKey, refresh, activeModule, setActiveModule }) {
+  const [workspaceMode, setWorkspaceMode] = useState("admin");
+  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const options = useAsync(api.getEmployeeOptions, [refreshKey]);
   const modulePages = {
     overview: <DashboardPage refreshKey={refreshKey} refresh={refresh} />,
     recruitment: <RecruitmentPage refreshKey={refreshKey} refresh={refresh} />,
@@ -566,55 +676,195 @@ function DashboardWorkspace({ refreshKey, refresh, activeModule, setActiveModule
     exit: <ExitPage refreshKey={refreshKey} refresh={refresh} />,
     reports: <ReportsPage refreshKey={refreshKey} refresh={refresh} />,
   };
+  const isEmployeeMode = workspaceMode === "employee";
+
+  useEffect(() => {
+    const first = options.data?.[0]?.codigo_empresa;
+    if (first) {
+      setSelectedEmployee((current) => current || first);
+    }
+  }, [options.data]);
 
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell ${isEmployeeMode ? "employee-mode" : ""}`}>
       <aside className="admin-sidebar">
         <div className="admin-brand">
           <div className="brand-mark">T360</div>
           <div>
             <strong>Talento 360</strong>
-            <span>Admin workspace</span>
+            <span>{isEmployeeMode ? "Portal del empleado" : "Admin workspace"}</span>
           </div>
         </div>
         <nav className="admin-nav" aria-label="Módulos del dashboard">
-          {moduleTabs.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                className={activeModule === item.id ? "active" : ""}
-                key={item.id}
-                onClick={() => setActiveModule(item.id)}
-              >
-                <Icon size={18} />
-                <span>{item.label}</span>
-                <ChevronRight size={15} />
-              </button>
-            );
-          })}
+          {isEmployeeMode ? (
+            <button className="active" type="button">
+              <CircleUserRound size={18} />
+              <span>Mi portal</span>
+              <ChevronRight size={15} />
+            </button>
+          ) : (
+            moduleTabs.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  className={activeModule === item.id ? "active" : ""}
+                  key={item.id}
+                  onClick={() => setActiveModule(item.id)}
+                >
+                  <Icon size={18} />
+                  <span>{item.label}</span>
+                  <ChevronRight size={15} />
+                </button>
+              );
+            })
+          )}
         </nav>
         <div className="admin-sidebar-card">
-          <Settings2 size={18} />
-          <strong>Demo operativa</strong>
-          <span>FastAPI + React con datos generados para la presentación.</span>
+          {isEmployeeMode ? <UserCheck size={18} /> : <Settings2 size={18} />}
+          <strong>{isEmployeeMode ? "Vista limitada" : "Demo operativa"}</strong>
+          <span>
+            {isEmployeeMode
+              ? "El colaborador consulta su información sin administrar datos globales."
+              : "FastAPI + React con datos generados para la presentación."}
+          </span>
         </div>
       </aside>
       <section className="admin-main">
         <div className="admin-topbar">
           <div>
-            <span className="eyebrow">Panel administrativo</span>
-            <strong>{moduleTabs.find((item) => item.id === activeModule)?.label || "Dashboard"}</strong>
+            <span className="eyebrow">{isEmployeeMode ? "Panel del empleado" : "Panel administrativo"}</span>
+            <strong>{isEmployeeMode ? "Mi información laboral" : moduleTabs.find((item) => item.id === activeModule)?.label || "Dashboard"}</strong>
           </div>
           <div className="admin-actions">
-            <span><Database size={16} /> 300 colaboradores</span>
+            <div className="view-switch" role="group" aria-label="Cambiar vista">
+              <button
+                className={workspaceMode === "admin" ? "active" : ""}
+                type="button"
+                onClick={() => setWorkspaceMode("admin")}
+              >
+                <UserRoundCog size={16} />
+                Admin
+              </button>
+              <button
+                className={workspaceMode === "employee" ? "active" : ""}
+                type="button"
+                onClick={() => setWorkspaceMode("employee")}
+              >
+                <CircleUserRound size={16} />
+                Empleado
+              </button>
+            </div>
+            {isEmployeeMode ? (
+              <select
+                className="employee-picker"
+                value={selectedEmployee}
+                onChange={(event) => setSelectedEmployee(event.target.value)}
+                aria-label="Seleccionar empleado demo"
+              >
+                {(options.data || []).map((employee) => (
+                  <option key={employee.codigo_empresa} value={employee.codigo_empresa}>
+                    {employee.codigo_empresa} - {employee.nombre_completo}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <span><Database size={16} /> 300 colaboradores</span>
+            )}
             <button className="ghost-button" onClick={refresh}><RefreshCw size={16} />Actualizar</button>
           </div>
         </div>
         <div className="admin-content">
-          {modulePages[activeModule]}
+          {isEmployeeMode ? (
+            <EmployeeWorkspace codigoEmpresa={selectedEmployee} refreshKey={refreshKey} />
+          ) : (
+            modulePages[activeModule]
+          )}
         </div>
       </section>
     </div>
+  );
+}
+
+function EmployeeWorkspace({ codigoEmpresa, refreshKey }) {
+  const { data, loading, error } = useAsync(
+    () => codigoEmpresa ? api.getEmployeeWorkspace(codigoEmpresa) : Promise.resolve(null),
+    [codigoEmpresa, refreshKey],
+  );
+
+  if (!codigoEmpresa) {
+    return <EmptyState title="Selecciona un empleado" text="Usa el selector superior para abrir una vista de empleado." />;
+  }
+  if (loading) return <LoadingScreen />;
+  if (error) return <ErrorScreen error={error} />;
+  if (!data) return null;
+
+  const profile = data.profile;
+  const latestEvaluation = data.evaluaciones?.[0];
+  const attendanceCount = data.asistencias?.filter((item) => item.presente).length || 0;
+  const absenceCount = data.ausencias?.length || 0;
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Vista de empleado"
+        title={profile.nombre_completo}
+        description="Portal de consulta personal con perfil laboral, asistencia, capacitaciones y evaluación individual."
+      />
+      <section className="metric-grid four">
+        <MetricCard label="Estado" value={profile.estado} detail={profile.departamento} icon={UserCheck} />
+        <MetricCard label="Puesto" value={profile.puesto || "-"} detail={`Código ${profile.codigo_empresa}`} icon={BriefcaseBusiness} tone="cyan" />
+        <MetricCard label="Asistencias recientes" value={attendanceCount} detail="Últimos registros presentes" icon={CalendarCheck} tone="green" />
+        <MetricCard label="Desempeño actual" value={latestEvaluation ? `${latestEvaluation.pct_neto}%` : "Sin dato"} detail="Evaluación neta" icon={BookOpenCheck} tone="lime" />
+      </section>
+      <section className="split-grid">
+        <Panel title="Mi perfil laboral" subtitle="Datos visibles para el colaborador">
+          <div className="profile-list">
+            <span><b>Cédula</b>{profile.numero_cedula}</span>
+            <span><b>Fecha de ingreso</b>{profile.fecha_ingreso}</span>
+            <span><b>Departamento</b>{profile.departamento}</span>
+            <span><b>Teléfono</b>{profile.telefono_principal}</span>
+            <span><b>Dirección</b>{profile.direccion}</span>
+            <span><b>Observaciones</b>{profile.observaciones || "Sin observaciones"}</span>
+          </div>
+        </Panel>
+        <Panel title="Mi desempeño" subtitle="Historial de evaluaciones">
+          <div className="score-card">
+            <span>Última evaluación neta</span>
+            <strong>{latestEvaluation ? `${latestEvaluation.pct_neto}%` : "Sin evaluación"}</strong>
+            <small>{latestEvaluation ? `Fecha: ${latestEvaluation.fecha_evaluacion}` : "Aún no hay evaluaciones registradas."}</small>
+          </div>
+          <DataTable
+            columns={[
+              { key: "fecha_evaluacion", label: "Fecha" },
+              { key: "pct_bruto", label: "Bruto", render: (value) => `${value}%` },
+              { key: "pct_neto", label: "Neto", render: (value) => `${value}%` },
+            ]}
+            rows={data.evaluaciones || []}
+          />
+        </Panel>
+      </section>
+      <section className="split-grid">
+        <Panel title="Mi asistencia reciente" subtitle={`${absenceCount} ausencias registradas en la muestra`}>
+          <DataTable
+            columns={[
+              { key: "fecha", label: "Fecha" },
+              { key: "presente", label: "Estado", render: (value) => <StatusBadge value={value ? "Presente" : "Ausente"} /> },
+            ]}
+            rows={data.asistencias || []}
+          />
+        </Panel>
+        <Panel title="Mis capacitaciones">
+          <DataTable
+            columns={[
+              { key: "nombre_capacitacion", label: "Capacitación" },
+              { key: "fecha_inicio", label: "Inicio" },
+              { key: "fecha_fin", label: "Fin" },
+            ]}
+            rows={data.capacitaciones || []}
+          />
+        </Panel>
+      </section>
+    </>
   );
 }
 
@@ -685,155 +935,219 @@ function ManualPage({ setActivePage }) {
 }
 
 function DashboardPage({ refreshKey, refresh }) {
-  const { data, loading, error } = useAsync(api.getDashboard, [refreshKey]);
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(today);
+  const [department, setDepartment] = useState("");
+  const [status, setStatus] = useState("todos");
+  const departments = useAsync(api.getDepartments, [refreshKey]);
+  const { data, loading, error } = useAsync(
+    () => api.getDashboard({
+      start_date: startDate,
+      end_date: endDate,
+      department_id: department,
+      status,
+    }),
+    [refreshKey, startDate, endDate, department, status],
+  );
 
-  if (loading) return <LoadingScreen />;
+  if (loading || departments.loading) return <LoadingScreen />;
   if (error) return <ErrorScreen error={error} />;
+  if (departments.error) return <ErrorScreen error={departments.error} />;
 
   const summary = data.summary;
   const departmentData = data.by_department.map((item, index) => ({
     ...item,
     color: colorForDepartment(item.name, index),
   }));
-  const performanceData = data.performance_by_department.map((item, index) => ({
-    ...item,
-    color: colorForDepartment(item.departamento, index),
-  }));
+  const performanceData = data.performance_by_department
+    .map((item, index) => ({
+      ...item,
+      color: colorForDepartment(item.departamento, index),
+    }))
+    .sort((a, b) => b.promedio - a.promedio);
+  const attendanceData = data.attendance_by_department
+    .map((item, index) => ({
+      ...item,
+      color: colorForDepartment(item.departamento, index),
+    }))
+    .sort((a, b) => a.asistencia - b.asistencia);
   const departmentTotal = departmentData.reduce((total, item) => total + item.value, 0);
-  const largestDepartment = departmentData.reduce(
-    (largest, item) => (!largest || item.value > largest.value ? item : largest),
-    null,
-  );
   const topPerformance = performanceData.reduce(
     (highest, item) => (!highest || item.promedio > highest.promedio ? item : highest),
     null,
   );
+  const lowestAttendance = attendanceData[0];
 
   return (
     <>
       <PageHeader
         eyebrow="Vista gerencial"
         title="Dashboard de Recursos Humanos"
-        description="Indicadores clave para una empresa de 300 colaboradores, con colores separados por departamento."
+        description="Indicadores clave con filtros por fecha, departamento y estado para una empresa demo de mínimo 300 colaboradores."
         actions={<button className="ghost-button" onClick={refresh}><RefreshCw size={16} />Actualizar</button>}
       />
-      <section className="metric-grid">
-        <MetricCard label="Colaboradores" value={summary.total_colaboradores} detail={`${summary.activos} activos`} icon={UsersRound} />
+      <Panel title="Filtros de grupos" subtitle="Ajusta fechas y condiciones para leer la información por segmento">
+        <div className="filter-grid">
+          <Field label="Desde">
+            <input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} />
+          </Field>
+          <Field label="Hasta">
+            <input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} />
+          </Field>
+          <Field label="Departamento">
+            <select value={department} onChange={(event) => setDepartment(event.target.value)}>
+              <option value="">Todos los departamentos</option>
+              {(departments.data || []).map((dep) => (
+                <option key={dep.id_departamento} value={dep.id_departamento}>{dep.nombre_departamento}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Condición">
+            <select value={status} onChange={(event) => setStatus(event.target.value)}>
+              <option value="todos">Todos</option>
+              <option value="activo">Activos</option>
+              <option value="terminado">Inactivos</option>
+            </select>
+          </Field>
+          <button
+            className="ghost-button filter-reset"
+            type="button"
+            onClick={() => {
+              setStartDate(defaultStartDate);
+              setEndDate(today);
+              setDepartment("");
+              setStatus("todos");
+            }}
+          >
+            <Filter size={16} />
+            Limpiar filtros
+          </button>
+        </div>
+      </Panel>
+      <section className="metric-grid five">
+        <MetricCard label="Colaboradores filtrados" value={summary.total_colaboradores} detail="Según condición actual" icon={UsersRound} />
+        <MetricCard label="Activos" value={summary.activos} detail="Personas vigentes" icon={UserCheck} tone="green" />
+        <MetricCard label="Inactivos" value={summary.terminados} detail="Salidas registradas" icon={LogOut} tone="lime" />
         <MetricCard label="Asistencia" value={`${summary.tasa_asistencia}%`} detail={`${summary.ausencias} ausencias`} icon={Activity} tone="green" />
         <MetricCard label="Desempeño" value={`${summary.desempeno_promedio}%`} detail="Promedio neto" icon={BookOpenCheck} tone="cyan" />
-        <MetricCard label="Rotación" value={`${summary.rotacion}%`} detail={`${summary.terminados} salidas`} icon={LogOut} tone="lime" />
       </section>
       <section className="dashboard-grid">
-        <Panel title="Distribución por departamento" subtitle="Plantilla actual por área">
+        <Panel title="Plantilla activa e inactiva" subtitle="Conteos visibles por departamento">
           <div className="chart-insight">
-            <span>Área con mayor plantilla</span>
-            <strong>{largestDepartment?.name || "Sin datos"}</strong>
-            <b>{formatInteger(largestDepartment?.value)} colaboradores</b>
+            <span>Total visible</span>
+            <strong>{formatInteger(departmentTotal)} colaboradores</strong>
+            <b>{formatInteger(summary.activos)} activos</b>
           </div>
-          <div className="distribution-layout">
-            <div className="donut-chart">
-              <ResponsiveContainer width="100%" height={280}>
-                <PieChart>
-                  <Pie
-                    data={departmentData}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={72}
-                    outerRadius={108}
-                    paddingAngle={2}
-                    stroke="var(--card)"
-                    strokeWidth={2}
-                  >
-                    {departmentData.map((item) => <Cell key={item.name} fill={item.color} />)}
-                  </Pie>
-                  <text x="50%" y="46%" textAnchor="middle" className="donut-total-value">
-                    {formatInteger(departmentTotal)}
-                  </text>
-                  <text x="50%" y="55%" textAnchor="middle" className="donut-total-label">
-                    colaboradores
-                  </text>
-                  <Tooltip
-                    {...chartTooltipProps}
-                    formatter={(value, name) => [
-                      `${formatInteger(value)} · ${formatPercentage((value / departmentTotal) * 100)}`,
-                      name,
-                    ]}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <DepartmentLegend items={departmentData} total={departmentTotal} />
-          </div>
+          <DepartmentStaffBars items={departmentData} total={departmentTotal} />
         </Panel>
-        <Panel title="Desempeño por departamento" subtitle="Promedio neto de evaluación">
+        <Panel title="Desempeño por departamento" subtitle="Ranking con promedio y evaluaciones">
           <div className="chart-insight">
             <span>Mejor resultado</span>
             <strong>{topPerformance?.departamento || "Sin datos"}</strong>
             <b>{formatPercentage(topPerformance?.promedio)}</b>
           </div>
-          <ResponsiveContainer width="100%" height={340}>
-            <BarChart data={performanceData} margin={{ top: 26, right: 8, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="departamento" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={80} />
-              <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} axisLine={false} tickLine={false} />
-              <Tooltip
-                {...chartTooltipProps}
-                formatter={(value) => [formatPercentage(value), "Desempeño promedio"]}
-              />
-              <Bar dataKey="promedio" radius={[8, 8, 0, 0]} maxBarSize={42}>
-                {performanceData.map((item) => <Cell key={item.departamento} fill={item.color} />)}
-                <LabelList
-                  dataKey="promedio"
-                  position="top"
-                  formatter={formatPercentage}
-                  className="chart-value-label"
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+          <PerformanceRanking items={performanceData} />
         </Panel>
-        <Panel title="Asistencia por departamento" subtitle="Porcentaje de presencia registrada" className="wide-panel">
+        <Panel title="Semáforo de asistencia" subtitle="Presencias, ausencias y porcentaje por departamento" className="wide-panel">
           <div className="chart-insight">
-            <span>Promedio general</span>
-            <strong>Asistencia registrada</strong>
-            <b>{formatPercentage(summary.tasa_asistencia)}</b>
+            <span>Atención prioritaria</span>
+            <strong>{lowestAttendance?.departamento || "Sin datos"}</strong>
+            <b>{formatPercentage(lowestAttendance?.asistencia)}</b>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={data.attendance_by_department} margin={{ top: 30, right: 14, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="attendance" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.6} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0.04} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="departamento" tick={{ fontSize: 11 }} interval={0} angle={-15} textAnchor="end" height={70} />
-              <YAxis domain={[80, 100]} tickFormatter={(value) => `${value}%`} axisLine={false} tickLine={false} />
-              <Tooltip
-                {...chartTooltipProps}
-                formatter={(value) => [formatPercentage(value), "Asistencia"]}
-              />
-              <Area
-                type="monotone"
-                dataKey="asistencia"
-                stroke="#10b981"
-                fill="url(#attendance)"
-                strokeWidth={3}
-                dot={{ r: 4, fill: "#10b981", stroke: "var(--card)", strokeWidth: 2 }}
-                activeDot={{ r: 6 }}
-              >
-                <LabelList
-                  dataKey="asistencia"
-                  position="top"
-                  formatter={formatPercentage}
-                  className="chart-value-label"
-                />
-              </Area>
-            </AreaChart>
-          </ResponsiveContainer>
+          <AttendanceBoard items={attendanceData} />
+        </Panel>
+        <Panel title="Evaluaciones destacadas por usuario" subtitle="Desempeño individual para profundizar por colaborador" className="wide-panel">
+          <DataTable
+            columns={[
+              { key: "codigo_empresa", label: "Código" },
+              { key: "empleado", label: "Empleado" },
+              { key: "fecha_evaluacion", label: "Fecha" },
+              { key: "pct_bruto", label: "Bruto", render: (value) => `${value}%` },
+              { key: "pct_neto", label: "Neto", render: (value) => `${value}%` },
+            ]}
+            rows={data.performance_by_employee || []}
+          />
         </Panel>
       </section>
     </>
+  );
+}
+
+function DepartmentStaffBars({ items, total }) {
+  if (!items?.length) return <EmptyState text="No hay departamentos para el filtro seleccionado." />;
+  const max = Math.max(...items.map((item) => item.value), 1);
+
+  return (
+    <div className="department-bars">
+      {items.map((item) => {
+        const activePct = item.value ? (item.activos / item.value) * 100 : 0;
+        const inactivePct = item.value ? (item.terminados / item.value) * 100 : 0;
+        return (
+          <article className="department-bar-row" key={item.name}>
+            <div className="department-bar-title">
+              <span><i style={{ background: item.color }} />{item.name}</span>
+              <strong>{formatInteger(item.value)}</strong>
+            </div>
+            <div className="staff-meter" aria-label={`${item.name}: ${item.activos} activos y ${item.terminados} inactivos`}>
+              <div className="staff-meter-scale" style={{ width: `${Math.max((item.value / max) * 100, 4)}%` }}>
+                <i className="staff-active" style={{ width: `${activePct}%` }} />
+                <i className="staff-inactive" style={{ width: `${inactivePct}%` }} />
+              </div>
+            </div>
+            <div className="department-bar-meta">
+              <span>{formatInteger(item.activos)} activos</span>
+              <span>{formatInteger(item.terminados)} inactivos</span>
+              <span>{formatPercentage(total ? (item.value / total) * 100 : 0)} del total</span>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
+function PerformanceRanking({ items }) {
+  if (!items?.length) return <EmptyState text="No hay evaluaciones para el filtro seleccionado." />;
+
+  return (
+    <div className="ranking-list">
+      {items.map((item, index) => (
+        <article className="ranking-row" key={item.departamento}>
+          <div className="ranking-heading">
+            <span>{index + 1}. {item.departamento}</span>
+            <strong>{formatPercentage(item.promedio)}</strong>
+          </div>
+          <div className="ranking-track">
+            <i style={{ width: `${Math.min(Math.max(item.promedio, 0), 100)}%`, background: item.color }} />
+          </div>
+          <small>{formatInteger(item.evaluaciones)} evaluaciones registradas</small>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function AttendanceBoard({ items }) {
+  if (!items?.length) return <EmptyState text="No hay registros de asistencia para el filtro seleccionado." />;
+
+  return (
+    <div className="attendance-board">
+      {items.map((item) => {
+        const pct = Math.min(Math.max(item.asistencia, 0), 100);
+        return (
+          <article className="attendance-row" key={item.departamento}>
+            <div>
+              <strong>{item.departamento}</strong>
+              <span>{formatInteger(item.presentes)} presentes · {formatInteger(item.ausentes)} ausentes · {formatInteger(item.registros)} registros</span>
+            </div>
+            <div className="attendance-meter">
+              <i style={{ width: `${pct}%`, background: item.color }} />
+            </div>
+            <b>{formatPercentage(item.asistencia)}</b>
+          </article>
+        );
+      })}
+    </div>
   );
 }
 
@@ -1221,7 +1535,7 @@ function DailyPage({ refreshKey, refresh }) {
           </FormGrid>
         </Panel>
       </section>
-      <Panel title="Registros recientes" subtitle="Ultimos movimientos de control diario">
+      <Panel title="Registros recientes" subtitle="Últimos movimientos de control diario">
         <DataTable
           columns={[
             { key: "codigo_empresa", label: "Código" },
@@ -1348,7 +1662,7 @@ function ExitPage({ refreshKey, refresh }) {
   const recent = useAsync(api.getRecentRecords, [refreshKey]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [movement, setMovement] = useState({ codigo_empresa: "", fecha_movimiento: today, puesto_nuevo: "Coordinador", depto_nuevo: "", motivo: "Promocion interna" });
+  const [movement, setMovement] = useState({ codigo_empresa: "", fecha_movimiento: today, puesto_nuevo: "Coordinador", depto_nuevo: "", motivo: "Promoción interna" });
   const [termination, setTermination] = useState({ codigo_empresa: "", fecha_salida: today, motivo_salida: "Renuncia voluntaria", observaciones: "Cierre administrativo completado." });
 
   useEffect(() => {
@@ -1446,8 +1760,31 @@ function ReportsPage({ refreshKey, refresh }) {
         eyebrow="Módulo 6"
         title="Reportes gerenciales"
         description="Panel consolidado para analizar plantilla, rotación, asistencia y desempeño."
-        actions={<button className="ghost-button" onClick={refresh}><RefreshCw size={16} />Actualizar</button>}
+        actions={
+          <>
+            <PrintReportButton />
+            <button className="ghost-button" onClick={refresh}><RefreshCw size={16} />Actualizar</button>
+          </>
+        }
       />
+      <Panel title="Reporte ejecutivo Talento 360" subtitle={`Preparado para impresión PDF · ${today}`}>
+        <div className="report-cover">
+          <div>
+            <FileDown size={22} />
+            <strong>Resumen para gerencia</strong>
+            <p>
+              Este reporte consolida la situación de plantilla, asistencia, rotación,
+              capacitación y desempeño con datos demo del sistema.
+            </p>
+          </div>
+          <div className="report-stats">
+            <span><b>{formatInteger(data.summary.total_colaboradores)}</b> colaboradores</span>
+            <span><b>{formatInteger(data.summary.activos)}</b> activos</span>
+            <span><b>{formatInteger(data.summary.terminados)}</b> inactivos</span>
+            <span><b>{formatPercentage(data.summary.tasa_asistencia)}</b> asistencia</span>
+          </div>
+        </div>
+      </Panel>
       <section className="metric-grid four">
         <MetricCard label="Plantilla activa" value={data.summary.activos} icon={UsersRound} />
         <MetricCard label="Rotación" value={`${data.summary.rotacion}%`} icon={LogOut} tone="lime" />
@@ -1503,6 +1840,15 @@ function ReportsPage({ refreshKey, refresh }) {
         </Panel>
       </section>
     </>
+  );
+}
+
+function PrintReportButton() {
+  return (
+    <button className="primary-button standalone" type="button" onClick={() => window.print()}>
+      <Printer size={16} />
+      Imprimir PDF
+    </button>
   );
 }
 
