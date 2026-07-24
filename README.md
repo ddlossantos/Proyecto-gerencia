@@ -25,10 +25,16 @@ La entrega principal ahora es una aplicación web con:
 - Base local SQLite automática para la demostración.
 - Semilla automática de mínimo 300 colaboradores.
 - Soporte opcional para MySQL por `DATABASE_URL`.
-- Presentación de producto con tres pestañas principales: Inicio, Solución y Dashboard.
+- Presentación de producto con cuatro pestañas principales: Inicio, Solución, Planes y Dashboard.
 - Inicio une portada, introducción, organigrama y quiénes somos en una experiencia de desplazamiento.
 - Solución une la propuesta de producto y el manual de usuario por módulo.
+- Planes presenta paquetes Básico, Personal y Empresarial para vender el software.
 - Dashboard agrupa el resumen gerencial y los módulos operativos en subpestañas.
+- Vista de administrador y vista de empleado desde el mismo dashboard.
+- Filtros por fecha, departamento y condición de colaborador en el resumen gerencial.
+- Conteos visibles de colaboradores activos e inactivos.
+- Gráficas reemplazadas por lecturas ejecutivas con cantidades y porcentajes visibles sin depender del hover.
+- Reporte gerencial imprimible desde el navegador para guardarlo como PDF.
 - Modo nocturno persistente desde la barra superior.
 - Carga y análisis de hojas de vida en PDF o TXT desde el módulo de Reclutamiento.
 - Administración de departamentos desde el módulo de Personal.

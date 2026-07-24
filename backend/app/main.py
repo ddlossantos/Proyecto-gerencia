@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from datetime import date
 import os
 import secrets
 
@@ -82,8 +83,20 @@ def seed(
 
 
 @app.get("/api/dashboard")
-def get_dashboard(db: Session = Depends(get_db)):
-    return repository.dashboard(db)
+def get_dashboard(
+    start_date: date | None = None,
+    end_date: date | None = None,
+    department_id: int | None = None,
+    status: str | None = "todos",
+    db: Session = Depends(get_db),
+):
+    return repository.dashboard(
+        db,
+        start_date=start_date,
+        end_date=end_date,
+        department_id=department_id,
+        status=status,
+    )
 
 
 @app.get("/api/departments")
@@ -124,6 +137,11 @@ def get_employees(
 @app.get("/api/employees/options")
 def get_employee_options(db: Session = Depends(get_db)):
     return repository.get_active_employee_options(db)
+
+
+@app.get("/api/employees/{codigo_empresa}/workspace")
+def get_employee_workspace(codigo_empresa: str, db: Session = Depends(get_db)):
+    return repository.employee_workspace(db, codigo_empresa)
 
 
 @app.get("/api/vacancies")

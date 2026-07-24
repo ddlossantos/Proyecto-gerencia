@@ -11,6 +11,7 @@ def test_expected_routes_are_registered():
     assert ("/api/health", "GET") in routes
     assert ("/api/departments/{department_id}", "PUT") in routes
     assert ("/api/departments/{department_id}", "DELETE") in routes
+    assert ("/api/employees/{codigo_empresa}/workspace", "GET") in routes
     assert ("/api/recruitment/analyze", "POST") in routes
 
 

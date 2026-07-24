@@ -13,7 +13,7 @@ async function request(path, options = {}) {
   });
 
   if (!response.ok) {
-    let detail = "Error de comunicacion con el servidor";
+    let detail = "Error de comunicación con el servidor";
     try {
       const payload = await response.json();
       detail = payload.detail || detail;
@@ -27,7 +27,14 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  getDashboard: () => request("/dashboard"),
+  getDashboard: (params = {}) => {
+    const search = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") search.set(key, value);
+    });
+    const suffix = search.toString() ? `?${search.toString()}` : "";
+    return request(`/dashboard${suffix}`);
+  },
   getDepartments: () => request("/departments"),
   createDepartment: (payload) => request("/departments", { method: "POST", body: JSON.stringify(payload) }),
   updateDepartment: (id, payload) => request(`/departments/${id}`, { method: "PUT", body: JSON.stringify(payload) }),
@@ -40,6 +47,7 @@ export const api = {
     return request(`/employees?${search.toString()}`);
   },
   getEmployeeOptions: () => request("/employees/options"),
+  getEmployeeWorkspace: (codigoEmpresa) => request(`/employees/${codigoEmpresa}/workspace`),
   getVacancies: () => request("/vacancies"),
   getEvaluations: (params = {}) => {
     const search = new URLSearchParams();

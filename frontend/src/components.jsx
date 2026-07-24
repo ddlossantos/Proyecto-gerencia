@@ -70,6 +70,19 @@ export function EmptyState({ title = "Sin datos", text = "No hay registros para 
 
 export function DataTable({ columns, rows, emptyText }) {
   if (!rows?.length) return <EmptyState text={emptyText} />;
+  const recordKey = (row, index) => (
+    row.id
+    ?? row.id_empleado
+    ?? row.id_asistencia
+    ?? row.id_ausencia
+    ?? row.id_vacacion
+    ?? row.id_capacitacion
+    ?? row.id_evaluacion
+    ?? row.id_salida
+    ?? row.id_movimiento
+    ?? `${row.codigo_empresa || "row"}-${index}`
+  );
+
   return (
     <div className="table-wrap">
       <table>
@@ -82,7 +95,7 @@ export function DataTable({ columns, rows, emptyText }) {
         </thead>
         <tbody>
           {rows.map((row, index) => (
-            <tr key={row.id || row.codigo_empresa || row.id_empleado || index}>
+            <tr key={recordKey(row, index)}>
               {columns.map((column) => (
                 <td key={column.key}>
                   {column.render ? column.render(row[column.key], row) : row[column.key] ?? "-"}

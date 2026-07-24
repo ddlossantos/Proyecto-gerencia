@@ -25,30 +25,35 @@ La carpeta `Proyecto Final Gerencia de Recursos Humanos 1IL252 Grupo 6` ya conti
 ## Ajustes hechos para continuar con git
 
 - Se limpiaron salidas ejecutadas de notebooks para evitar ruido en commits.
-- Se reemplazo la clave de MySQL escrita directamente por variables de entorno.
-- Se agrego `.env.example` para documentar la configuracion local sin subir credenciales reales.
-- Se agrego `requirements.txt` para instalar dependencias en un entorno virtual.
+- Se reemplazó la clave de MySQL escrita directamente por variables de entorno.
+- Se agregó `.env.example` para documentar la configuración local sin subir credenciales reales.
+- Se agregó `requirements.txt` para instalar dependencias en un entorno virtual.
 
 ## Nueva app unificada
 
-- Se agrego backend FastAPI en `backend/`.
-- Se agrego frontend React + Vite en `frontend/`.
+- Se agregó backend FastAPI en `backend/`.
+- Se agregó frontend React + Vite en `frontend/`.
 - El backend crea datos de demostración de 300 colaboradores si la base está vacía.
 - La interfaz incluye dashboard gerencial, reclutamiento, personal, control diario, desarrollo, salida y reportes.
 - La base de demostración predeterminada es SQLite para que la presentación pueda ejecutarse aunque MySQL no esté instalado; MySQL queda disponible mediante la configuración de `DATABASE_URL`.
 
 ## Enfoque de producto y venta
 
-- Se reorganizó el frontend en tres pestañas principales: Inicio, Solución y Dashboard.
-- Se reforzo el lenguaje visual con una landing estilo producto SaaS inspirada en Play Astro y un dashboard administrativo inspirado en TailAdmin.
+- Se reorganizó el frontend en cuatro pestañas principales: Inicio, Solución, Planes y Dashboard.
+- Se reforzó el lenguaje visual con una landing estilo producto SaaS inspirada en Play Astro y un dashboard administrativo inspirado en TailAdmin.
 - Se agregó un modo nocturno persistente para mejorar la presentación visual en clase o durante la demostración.
 - Inicio presenta Talento 360 como producto de software para vender a gerencia e integra portada, introducción, organigrama y funciones del equipo.
 - Solución explica qué ofrece cada módulo e incluye el manual de usuario correspondiente.
-- Dashboard agrupa el resumen gerencial y los modulos operativos en subpestanas.
+- Planes presenta tiers Básico, Personal y Empresarial; el paquete Empresarial se maneja por cotización según el caso.
+- Dashboard agrupa el resumen gerencial y los módulos operativos en subpestañas.
+- Dashboard incluye vista de administrador y vista de empleado.
+- Dashboard permite filtrar por fechas, departamento y condición de colaborador.
+- Dashboard muestra conteos de personas activas e inactivas.
 - El manual resume el uso de cada módulo y el tipo de marcado de asistencia.
 - Reclutamiento muestra vacantes abiertas, cantidades y puestos.
 - Desarrollo permite filtrar evaluaciones por colaborador y ver su porcentaje neto.
-- El dashboard utiliza colores diferenciados por departamento y agrega una leyenda para facilitar la lectura.
+- Las gráficas principales se reemplazaron por lecturas ejecutivas con números visibles, barras por departamento y semáforo de asistencia.
+- Reportes incluye una opción de imprimir desde el navegador para guardar el reporte como PDF.
 - Reclutamiento permite cargar y analizar hojas de vida en PDF o TXT.
 - Personal permite crear, editar y eliminar departamentos sin colaboradores asignados.
 - Las operaciones sensibles de regeneración de datos requieren una clave local.
